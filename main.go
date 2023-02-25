@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
-	"github.com/techstart35/kifuneso-bot/src"
+	"github.com/techstart35/kifuneso-bot/handler/message_create"
 	"os"
 	"os/signal"
 	"syscall"
@@ -22,7 +22,7 @@ func init() {
 	}
 	time.Local = loc
 
-	if err := godotenv.Load(".env"); err != nil {
+	if err = godotenv.Load(".env"); err != nil {
 		panic(fmt.Sprintf(".envを読み込めません: %v", err))
 	}
 }
@@ -37,8 +37,7 @@ func main() {
 	}
 
 	//イベントハンドラを追加
-	session.AddHandler(src.SendEmbedMessage)
-	session.AddHandler(src.Help)
+	session.AddHandler(message_create.Handler)
 
 	if err = session.Open(); err != nil {
 		panic(err)

@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/bwmarrin/discordgo v0.26.1
+	github.com/gocarina/gocsv v0.0.0-20230223115542-dc4ee9de5fe2
 	github.com/joho/godotenv v1.4.0
 )
 
