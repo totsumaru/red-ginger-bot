@@ -1,0 +1,102 @@
+package slot
+
+import (
+	"fmt"
+	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/internal/cmd"
+	"github.com/techstart35/kifuneso-bot/internal/color"
+	"github.com/techstart35/kifuneso-bot/internal/errors"
+	"strings"
+)
+
+// パネルを送信します
+//
+// 新規でパネルを送信する場合は`currentPanelURL`を空に、
+// パネルを更新する場合は、現在のパネルのURLを入れてください。
+func SendPanel(s *discordgo.Session, m *discordgo.MessageCreate, currentPanelURL string) error {
+	btn1 := discordgo.Button{
+		Style:    discordgo.SecondaryButton,
+		CustomID: cmd.Interaction_CustomID_Slot_1,
+		Emoji: discordgo.ComponentEmoji{
+			Name: "1️⃣",
+		},
+	}
+
+	btn2 := discordgo.Button{
+		Style:    discordgo.SecondaryButton,
+		CustomID: cmd.Interaction_CustomID_Slot_2,
+		Emoji: discordgo.ComponentEmoji{
+			Name: "2️⃣",
+		},
+		Disabled: true,
+	}
+
+	btn3 := discordgo.Button{
+		Style:    discordgo.SecondaryButton,
+		CustomID: cmd.Interaction_CustomID_Slot_3,
+		Emoji: discordgo.ComponentEmoji{
+			Name: "3️⃣",
+		},
+		Disabled: true,
+	}
+
+	actions := discordgo.ActionsRow{
+		Components: []discordgo.MessageComponent{btn1, btn2, btn3},
+	}
+
+	description := `
+スロットが回せます！
+`
+
+	embed := &discordgo.MessageEmbed{
+		Image: &discordgo.MessageEmbedImage{
+			URL: "https://www.sankyo-fever.jp/beginner/qa/image/s_73_2.jpg",
+		},
+		Title: "RG SLOT",
+		Description: fmt.Sprintf(
+			description,
+		),
+		Color: color.Red,
+	}
+
+	if currentPanelURL == "" {
+		// 新規のパネルを作成します
+		messageSend := &discordgo.MessageSend{
+			Components: []discordgo.MessageComponent{actions},
+			Embed:      embed,
+		}
+
+		_, err := s.ChannelMessageSendComplex(m.ChannelID, messageSend)
+		if err != nil {
+			return errors.NewError("パネルメッセージを送信できません", err)
+		}
+	} else {
+		// パネルを更新します
+
+		// URL例: https://discord.com/channels/1067806759034572870/1067807967950422096/1116242093434732595
+		replaced := strings.Replace(currentPanelURL, "https://discord.com/channels/", "", -1)
+		ids := strings.Split(replaced, "/")
+
+		currentPanelChannelID := ids[1]
+		currentPanelMessageID := ids[2]
+
+		edit := &discordgo.MessageEdit{
+			ID:         currentPanelMessageID,
+			Channel:    currentPanelChannelID,
+			Components: []discordgo.MessageComponent{actions},
+			Embed:      embed,
+		}
+
+		_, err := s.ChannelMessageEditComplex(edit)
+		if err != nil {
+			return errors.NewError("パネルを更新できません", err)
+		}
+	}
+
+	// コマンドメッセージを削除
+	if err := s.ChannelMessageDelete(m.ChannelID, m.ID); err != nil {
+		return errors.NewError("コマンドメッセージを削除できません", err)
+	}
+
+	return nil
+}
