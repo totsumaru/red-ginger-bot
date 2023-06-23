@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
-	"github.com/techstart35/kifuneso-bot/handler/message_create"
+	"github.com/techstart35/kifuneso-bot/handler"
 	"os"
 	"os/signal"
 	"syscall"
@@ -37,7 +37,7 @@ func main() {
 	}
 
 	//イベントハンドラを追加
-	session.AddHandler(message_create.Handler)
+	handler.Handler(session)
 
 	if err = session.Open(); err != nil {
 		panic(err)
