@@ -1,7 +1,6 @@
 package slot
 
 import (
-	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -140,7 +139,6 @@ func isReach(firstValue, secondValue string) bool {
 	}
 
 	if _, ok := prize[value]; ok {
-		fmt.Println("リーチ!")
 		return true
 	}
 
