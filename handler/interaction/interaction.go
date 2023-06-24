@@ -13,6 +13,16 @@ func InteractionCreateHandler(s *discordgo.Session, i *discordgo.InteractionCrea
 	// メッセージコンポーネント（ボタン）イベント
 	case discordgo.InteractionMessageComponent:
 		switch i.MessageComponentData().CustomID {
+		case cmd.Interaction_CustomID_Slot_Start:
+			if err := slot.SendStartMessage(s, i, false); err != nil {
+				errors.SendErrMsg(s, err, i.Member.User)
+			}
+			return
+		case cmd.Interaction_CustomID_Slot_Retry:
+			if err := slot.SendStartMessage(s, i, true); err != nil {
+				errors.SendErrMsg(s, err, i.Member.User)
+			}
+			return
 		case cmd.Interaction_CustomID_Slot_1:
 			if err := slot.SendFirstNumber(s, i); err != nil {
 				errors.SendErrMsg(s, err, i.Member.User)

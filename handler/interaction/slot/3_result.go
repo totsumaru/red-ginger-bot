@@ -3,34 +3,69 @@ package slot
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/internal/cmd"
 	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
-	"strconv"
 	"strings"
 )
 
 // 3回目の数字を送信します
 func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error {
-	num := getRandomNum()
 	lastDescription := strings.Replace(i.Message.Embeds[0].Description, "**", "", -1)
 	lastDescription = strings.Replace(lastDescription, " ", "", -1)
-	lastNum1 := strings.Split(lastDescription, "｜")[0]
-	lastNum2 := strings.Split(lastDescription, "｜")[1]
+	lastValue1 := strings.Split(lastDescription, "｜")[0]
+	lastValue2 := strings.Split(lastDescription, "｜")[1]
+	value := getRandomValue(3, lastValue1, lastValue2)
+
+	descriptionTmpl := `
+%s
+
+%s
+`
 
 	description := ""
 
-	if lastNum1 == lastNum2 && lastNum2 == strconv.Itoa(int(num)) {
+	switch judgePrize(lastValue1, lastValue2, value) {
+	case Prize_Lose:
 		description = fmt.Sprintf(
-			"%s\n\n%s",
-			fmt.Sprintf(DescriptionTmpl, lastNum1, lastNum2, strconv.Itoa(int(num))),
-			"おめでとうございます🎉\nロールを付与しました！",
+			descriptionTmpl,
+			"残念！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
-	} else {
+	case Prize_Big:
 		description = fmt.Sprintf(
-			"%s\n\n%s",
-			fmt.Sprintf(DescriptionTmpl, lastNum1, lastNum2, strconv.Itoa(int(num))),
-			"残念...また明日チャレンジしてみてね！",
+			descriptionTmpl,
+			"大当たり🎉🎉🎉\nロールを付与しました！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
+	case Prize_AL:
+		description = fmt.Sprintf(
+			descriptionTmpl,
+			"当たり-AL🎉🎉\nロールを付与しました！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
+	case Prize_Small:
+		description = fmt.Sprintf(
+			descriptionTmpl,
+			"小当たり🎉\nロールを付与しました！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
+	case Prize_OneMore:
+		description = fmt.Sprintf(
+			descriptionTmpl,
+			"🍒が出たからもう一回遊べるよ！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
+	}
+
+	btn1 := discordgo.Button{
+		Style:    discordgo.PrimaryButton,
+		CustomID: cmd.Interaction_CustomID_Slot_Retry,
+		Label:    "もう一回",
+	}
+
+	actions := discordgo.ActionsRow{
+		Components: []discordgo.MessageComponent{btn1},
 	}
 
 	embed := &discordgo.MessageEmbed{
@@ -42,8 +77,9 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 	resp := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
-			Embeds: []*discordgo.MessageEmbed{embed},
-			Flags:  discordgo.MessageFlagsEphemeral,
+			Components: []discordgo.MessageComponent{actions},
+			Embeds:     []*discordgo.MessageEmbed{embed},
+			Flags:      discordgo.MessageFlagsEphemeral,
 		},
 	}
 

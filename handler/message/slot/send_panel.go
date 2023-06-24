@@ -16,32 +16,12 @@ import (
 func SendPanel(s *discordgo.Session, m *discordgo.MessageCreate, currentPanelURL string) error {
 	btn1 := discordgo.Button{
 		Style:    discordgo.SecondaryButton,
-		CustomID: cmd.Interaction_CustomID_Slot_1,
-		Emoji: discordgo.ComponentEmoji{
-			Name: "1️⃣",
-		},
-	}
-
-	btn2 := discordgo.Button{
-		Style:    discordgo.SecondaryButton,
-		CustomID: cmd.Interaction_CustomID_Slot_2,
-		Emoji: discordgo.ComponentEmoji{
-			Name: "2️⃣",
-		},
-		Disabled: true,
-	}
-
-	btn3 := discordgo.Button{
-		Style:    discordgo.SecondaryButton,
-		CustomID: cmd.Interaction_CustomID_Slot_3,
-		Emoji: discordgo.ComponentEmoji{
-			Name: "3️⃣",
-		},
-		Disabled: true,
+		CustomID: cmd.Interaction_CustomID_Slot_Start,
+		Label:    "スロットを始める",
 	}
 
 	actions := discordgo.ActionsRow{
-		Components: []discordgo.MessageComponent{btn1, btn2, btn3},
+		Components: []discordgo.MessageComponent{btn1},
 	}
 
 	description := `
