@@ -30,7 +30,7 @@ func SendPanel(s *discordgo.Session, m *discordgo.MessageCreate, currentPanelURL
 
 	embed := &discordgo.MessageEmbed{
 		Image: &discordgo.MessageEmbedImage{
-			URL: "https://www.sankyo-fever.jp/beginner/qa/image/s_73_2.jpg",
+			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122880972094984304/4eb3d3bc86865188.png",
 		},
 		Title: "RG SLOT",
 		Description: fmt.Sprintf(

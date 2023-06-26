@@ -48,6 +48,9 @@ func SendStartMessage(
 		Title:       Title,
 		Description: description,
 		Color:       color.Red,
+		Image: &discordgo.MessageEmbedImage{
+			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881161769795714/b57d42376b9173e2.gif",
+		},
 	}
 
 	responseType := discordgo.InteractionResponseChannelMessageWithSource

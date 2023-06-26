@@ -25,43 +25,6 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 %s
 `
 
-	description := ""
-
-	switch judgePrize(lastValue1, lastValue2, value) {
-	case Prize_Lose:
-		description = fmt.Sprintf(
-			descriptionTmpl,
-			"残念！",
-			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
-		)
-	case Prize_Big:
-		description = fmt.Sprintf(
-			descriptionTmpl,
-			"大当たり🎉🎉🎉\nロールを付与しました！",
-			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
-		)
-
-		if err := updateBigPrizeRole(s, i); err != nil {
-			return errors.NewError("大当たりロールを更新できません", err)
-		}
-	case Prize_Small:
-		description = fmt.Sprintf(
-			descriptionTmpl,
-			"小当たり🎉\n追加でもう5回遊べるよ！",
-			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
-		)
-
-		if err := slot.UpdateRoleToPlus5(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
-			return errors.NewError("小当たりでロールを更新できません", err)
-		}
-	case Prize_OneMore:
-		description = fmt.Sprintf(
-			descriptionTmpl,
-			"🍒が出たからもう一回遊べるよ！",
-			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
-		)
-	}
-
 	btn1 := discordgo.Button{
 		Style:    discordgo.PrimaryButton,
 		CustomID: cmd.Interaction_CustomID_Slot_Retry,
@@ -74,8 +37,83 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 
 	embed := &discordgo.MessageEmbed{
 		Title:       Title,
-		Description: description,
+		Description: "",
 		Color:       color.Red,
+	}
+
+	var resultStr = lastValue1 + lastValue2 + value
+
+	switch judgePrize(lastValue1, lastValue2, value) {
+	case Prize_Lose:
+		embed.Description = fmt.Sprintf(
+			descriptionTmpl,
+			"残念！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
+	case Prize_Big:
+		embed.Description = fmt.Sprintf(
+			descriptionTmpl,
+			"大当たり🎉🎉🎉\nロールを付与しました！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
+
+		switch resultStr {
+		case Prize_RedGinGer:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881805603835976/RGSLOT_REDGINGER.png",
+			}
+		case Prize_BeniShouGa:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881823878422669/RGSLOT_.png",
+			}
+		}
+
+		if err := updateBigPrizeRole(s, i); err != nil {
+			return errors.NewError("大当たりロールを更新できません", err)
+		}
+	case Prize_Small:
+		embed.Description = fmt.Sprintf(
+			descriptionTmpl,
+			"小当たり🎉\n追加でもう5回遊べるよ！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
+
+		switch resultStr {
+		case Prize_Red_3:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881687941025792/RGSLOT_RED.png",
+			}
+		case Prize_Gin_3:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881716068045023/RGSLOT_GIN.png",
+			}
+		case Prize_Ger_3:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881739166060644/RGSLOT_GER.png",
+			}
+		case Prize_Beni_3:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881757415493674/RGSLOT_.png",
+			}
+		case Prize_Shou_3:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881775505518612/RGSLOT_.png",
+			}
+		case Prize_Ga_3:
+			embed.Image = &discordgo.MessageEmbedImage{
+				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881790554689546/RGSLOT_.png",
+			}
+		}
+
+		if err := slot.UpdateRoleToPlus5(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
+			return errors.NewError("小当たりでロールを更新できません", err)
+		}
+	case Prize_OneMore:
+		embed.Description = fmt.Sprintf(
+			descriptionTmpl,
+			"🍒が出たからもう一回遊べるよ！",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
 	}
 
 	resp := &discordgo.InteractionResponse{

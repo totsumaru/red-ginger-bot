@@ -26,6 +26,17 @@ const (
 	Value_Cherry = "🍒"
 )
 
+const (
+	Prize_BeniShouGa = Value_Beni + Value_Shou + Value_Ga   // 紅-生-姜
+	Prize_RedGinGer  = Value_RED + Value_GIN + Value_GER    // RED-GIN-GER
+	Prize_Red_3      = Value_RED + Value_RED + Value_RED    // REDx3
+	Prize_Gin_3      = Value_GIN + Value_GIN + Value_GIN    // GINx3
+	Prize_Ger_3      = Value_GER + Value_GER + Value_GER    // GERx3
+	Prize_Beni_3     = Value_Beni + Value_Beni + Value_Beni // 紅x3
+	Prize_Shou_3     = Value_Shou + Value_Shou + Value_Shou // 生x3
+	Prize_Ga_3       = Value_Ga + Value_Ga + Value_Ga       // 姜x3
+)
+
 // ランダムな値を1つ取得します
 func getRandomValue(num int, firstValue, secondValue string) string {
 	rand.Seed(time.Now().UnixNano())
@@ -101,14 +112,14 @@ func judgePrize(first, second, third string) int {
 	value := first + second + third
 
 	prize := map[string]int{
-		Value_Beni + Value_Shou + Value_Ga:   Prize_Big,   // 紅生姜
-		Value_RED + Value_GIN + Value_GER:    Prize_Big,   // RED_GIN_GER
-		Value_Beni + Value_Beni + Value_Beni: Prize_Small, // 紅x3
-		Value_Shou + Value_Shou + Value_Shou: Prize_Small, // 生x3
-		Value_Ga + Value_Ga + Value_Ga:       Prize_Small, // 姜x3
-		Value_RED + Value_RED + Value_RED:    Prize_Small, // REDx3
-		Value_GIN + Value_GIN + Value_GIN:    Prize_Small, // GINx3
-		Value_GER + Value_GER + Value_GER:    Prize_Small, // GERx3
+		Prize_BeniShouGa: Prize_Big,   // 紅生姜
+		Prize_RedGinGer:  Prize_Big,   // RED_GIN_GER
+		Prize_Beni_3:     Prize_Small, // 紅x3
+		Prize_Shou_3:     Prize_Small, // 生x3
+		Prize_Ga_3:       Prize_Small, // 姜x3
+		Prize_Red_3:      Prize_Small, // REDx3
+		Prize_Gin_3:      Prize_Small, // GINx3
+		Prize_Ger_3:      Prize_Small, // GERx3
 	}
 
 	if strings.Contains(value, Value_Cherry) {
