@@ -14,7 +14,6 @@ const (
 	Title         = "RG SLOT"
 	Prize_Lose    = 0
 	Prize_Big     = 1
-	Prize_AL      = 2
 	Prize_Small   = 3
 	Prize_OneMore = 4
 
@@ -103,7 +102,7 @@ func judgePrize(first, second, third string) int {
 
 	prize := map[string]int{
 		Value_Beni + Value_Shou + Value_Ga:   Prize_Big,   // 紅生姜
-		Value_RED + Value_GIN + Value_GER:    Prize_AL,    // RED_GIN_GER
+		Value_RED + Value_GIN + Value_GER:    Prize_Big,   // RED_GIN_GER
 		Value_Beni + Value_Beni + Value_Beni: Prize_Small, // 紅x3
 		Value_Shou + Value_Shou + Value_Shou: Prize_Small, // 生x3
 		Value_Ga + Value_Ga + Value_Ga:       Prize_Small, // 姜x3

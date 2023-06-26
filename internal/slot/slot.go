@@ -7,10 +7,10 @@ import (
 )
 
 // 今のロールを削除し、+5したロールを付け直します
-func UpdateRoleToPlus5(s *discordgo.Session, m *discordgo.MessageCreate) error {
-	currentCount, currentRoles := getRemainingSlotTicketCount(m.Member.Roles)
+func UpdateRoleToPlus5(s *discordgo.Session, guildID, userID string, currentRoles []string) error {
+	currentCount, currentRoles := getRemainingSlotTicketCount(currentRoles)
 
-	if err := addPlus5SlotTicketRole(s, m, currentCount, currentRoles); err != nil {
+	if err := addPlus5SlotTicketRole(s, guildID, userID, currentCount, currentRoles); err != nil {
 		return errors.NewError("チケットロールを更新できません", err)
 	}
 
@@ -56,13 +56,14 @@ func getRemainingSlotTicketCount(roles []string) (int, []string) {
 // 既存の回数ロールは削除します。
 func addPlus5SlotTicketRole(
 	s *discordgo.Session,
-	m *discordgo.MessageCreate,
+	guildID string,
+	userID string,
 	currentCount int,
 	currentRoles []string,
 ) error {
 	// 既存の回数ロールは削除します
 	for _, currentRole := range currentRoles {
-		if err := s.GuildMemberRoleRemove(m.GuildID, m.Author.ID, currentRole); err != nil {
+		if err := s.GuildMemberRoleRemove(guildID, userID, currentRole); err != nil {
 			return errors.NewError("ロールを削除できません", err)
 		}
 	}
@@ -99,7 +100,7 @@ func addPlus5SlotTicketRole(
 
 	// ロールを新規追加します
 	for _, addRoleID := range addRoleIDs {
-		if err := s.GuildMemberRoleAdd(m.GuildID, m.Author.ID, addRoleID); err != nil {
+		if err := s.GuildMemberRoleAdd(guildID, userID, addRoleID); err != nil {
 			return errors.NewError("ロールを付与できません", err)
 		}
 	}
