@@ -6,9 +6,9 @@ import (
 	"github.com/techstart35/kifuneso-bot/internal/id"
 )
 
-// 5回追加したロールを取得するmapです
+// 5回追加したチケットロールを取得するmapです
 // 現在のロール: 5回追加したロール となります
-var FiveAddedRole = map[string]string{
+var FiveAddedTicketRole = map[string]string{
 	id.RoleID().SLOT_1_TICKET:  id.RoleID().SLOT_6_TICKET,
 	id.RoleID().SLOT_2_TICKET:  id.RoleID().SLOT_7_TICKET,
 	id.RoleID().SLOT_3_TICKET:  id.RoleID().SLOT_8_TICKET,
@@ -24,6 +24,24 @@ var FiveAddedRole = map[string]string{
 	id.RoleID().SLOT_13_TICKET: id.RoleID().SLOT_15_TICKET,
 	id.RoleID().SLOT_14_TICKET: id.RoleID().SLOT_15_TICKET,
 	id.RoleID().SLOT_15_TICKET: id.RoleID().SLOT_15_TICKET,
+}
+
+// 1回マイナスしたチケットロールを取得するmapです
+var MinusTicketRole = map[string]string{
+	id.RoleID().SLOT_15_TICKET: id.RoleID().SLOT_14_TICKET,
+	id.RoleID().SLOT_14_TICKET: id.RoleID().SLOT_13_TICKET,
+	id.RoleID().SLOT_13_TICKET: id.RoleID().SLOT_12_TICKET,
+	id.RoleID().SLOT_12_TICKET: id.RoleID().SLOT_11_TICKET,
+	id.RoleID().SLOT_11_TICKET: id.RoleID().SLOT_10_TICKET,
+	id.RoleID().SLOT_10_TICKET: id.RoleID().SLOT_9_TICKET,
+	id.RoleID().SLOT_9_TICKET:  id.RoleID().SLOT_8_TICKET,
+	id.RoleID().SLOT_8_TICKET:  id.RoleID().SLOT_7_TICKET,
+	id.RoleID().SLOT_7_TICKET:  id.RoleID().SLOT_6_TICKET,
+	id.RoleID().SLOT_6_TICKET:  id.RoleID().SLOT_5_TICKET,
+	id.RoleID().SLOT_5_TICKET:  id.RoleID().SLOT_4_TICKET,
+	id.RoleID().SLOT_4_TICKET:  id.RoleID().SLOT_3_TICKET,
+	id.RoleID().SLOT_3_TICKET:  id.RoleID().SLOT_2_TICKET,
+	id.RoleID().SLOT_2_TICKET:  id.RoleID().SLOT_1_TICKET,
 }
 
 // 次の当たりロールを取得するmapです
@@ -43,7 +61,7 @@ var NewAtariRole = map[string]string{
 // 今のロールを削除し、+5したロールを付け直します
 func UpdateRoleToPlus5(s *discordgo.Session, guildID, userID string, currentRoles []string) error {
 	for _, role := range currentRoles {
-		if afterRoleID, ok := FiveAddedRole[role]; ok {
+		if afterRoleID, ok := FiveAddedTicketRole[role]; ok {
 			// 現在のロールを削除します
 			if err := s.GuildMemberRoleRemove(guildID, userID, role); err != nil {
 				return errors.NewError("現在の回数ロールを削除できません", err)
@@ -56,6 +74,33 @@ func UpdateRoleToPlus5(s *discordgo.Session, guildID, userID string, currentRole
 	}
 
 	return nil
+}
+
+// チケットロールかどうかを判定します
+//
+// Addedロールは含みません。
+func IsSlotTicketRole(roleID string) bool {
+	switch roleID {
+	case id.RoleID().SLOT_1_TICKET,
+		id.RoleID().SLOT_2_TICKET,
+		id.RoleID().SLOT_3_TICKET,
+		id.RoleID().SLOT_4_TICKET,
+		id.RoleID().SLOT_5_TICKET,
+		id.RoleID().SLOT_6_TICKET,
+		id.RoleID().SLOT_7_TICKET,
+		id.RoleID().SLOT_8_TICKET,
+		id.RoleID().SLOT_9_TICKET,
+		id.RoleID().SLOT_10_TICKET,
+		id.RoleID().SLOT_11_TICKET,
+		id.RoleID().SLOT_12_TICKET,
+		id.RoleID().SLOT_13_TICKET,
+		id.RoleID().SLOT_14_TICKET,
+		id.RoleID().SLOT_15_TICKET:
+
+		return true
+	}
+
+	return false
 }
 
 // チケットロールかどうかを判定します
