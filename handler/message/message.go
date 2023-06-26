@@ -15,6 +15,11 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			errors.SendErrMsg(s, err, m.Author)
 			return
 		}
+	case cmd.CMD_Reset_Slot_Role:
+		if err := slot.ResetAndAddDailyRole(s, m); err != nil {
+			errors.SendErrMsg(s, err, m.Author)
+			return
+		}
 	}
 
 	return
