@@ -36,7 +36,8 @@ func ResetAndAddDailyRole(s *discordgo.Session, m *discordgo.MessageCreate) erro
 				roleIDs.SLOT_3_TICKET,
 				roleIDs.SLOT_4_TICKET,
 				roleIDs.SLOT_10_TICKET,
-				roleIDs.SLOT_15_TICKET:
+				roleIDs.SLOT_15_TICKET,
+				roleIDs.SLOT_ADDED:
 
 				if err = s.GuildMemberRoleRemove(m.GuildID, user.User.ID, role); err != nil {
 					return errors.NewError("ロールを付与できません", err)

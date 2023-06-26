@@ -22,5 +22,10 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 
+	if err := slot.AddFiveTicketRole(s, m); err != nil {
+		errors.SendErrMsg(s, err, m.Author)
+		return
+	}
+
 	return
 }
