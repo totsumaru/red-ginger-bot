@@ -6,104 +6,100 @@ import (
 	"github.com/techstart35/kifuneso-bot/internal/id"
 )
 
+// 5回追加したロールを取得するmapです
+// 現在のロール: 5回追加したロール となります
+var FiveAddedRole = map[string]string{
+	id.RoleID().SLOT_1_TICKET:  id.RoleID().SLOT_6_TICKET,
+	id.RoleID().SLOT_2_TICKET:  id.RoleID().SLOT_7_TICKET,
+	id.RoleID().SLOT_3_TICKET:  id.RoleID().SLOT_8_TICKET,
+	id.RoleID().SLOT_4_TICKET:  id.RoleID().SLOT_9_TICKET,
+	id.RoleID().SLOT_5_TICKET:  id.RoleID().SLOT_10_TICKET,
+	id.RoleID().SLOT_6_TICKET:  id.RoleID().SLOT_11_TICKET,
+	id.RoleID().SLOT_7_TICKET:  id.RoleID().SLOT_12_TICKET,
+	id.RoleID().SLOT_8_TICKET:  id.RoleID().SLOT_13_TICKET,
+	id.RoleID().SLOT_9_TICKET:  id.RoleID().SLOT_14_TICKET,
+	id.RoleID().SLOT_10_TICKET: id.RoleID().SLOT_15_TICKET,
+	id.RoleID().SLOT_11_TICKET: id.RoleID().SLOT_15_TICKET,
+	id.RoleID().SLOT_12_TICKET: id.RoleID().SLOT_15_TICKET,
+	id.RoleID().SLOT_13_TICKET: id.RoleID().SLOT_15_TICKET,
+	id.RoleID().SLOT_14_TICKET: id.RoleID().SLOT_15_TICKET,
+	id.RoleID().SLOT_15_TICKET: id.RoleID().SLOT_15_TICKET,
+}
+
+// 次の当たりロールを取得するmapです
+// 現在の当たりロール: 新しい当たりロール となります
+var NewAtariRole = map[string]string{
+	id.RoleID().ATARI_1: id.RoleID().ATARI_2,
+	id.RoleID().ATARI_2: id.RoleID().ATARI_3,
+	id.RoleID().ATARI_3: id.RoleID().ATARI_4,
+	id.RoleID().ATARI_4: id.RoleID().ATARI_5,
+	id.RoleID().ATARI_5: id.RoleID().ATARI_6,
+	id.RoleID().ATARI_6: id.RoleID().ATARI_7,
+	id.RoleID().ATARI_7: id.RoleID().ATARI_8,
+	id.RoleID().ATARI_8: id.RoleID().ATARI_9,
+	id.RoleID().ATARI_9: id.RoleID().ATARI_10,
+}
+
 // 今のロールを削除し、+5したロールを付け直します
 func UpdateRoleToPlus5(s *discordgo.Session, guildID, userID string, currentRoles []string) error {
-	currentCount, currentRoles := getRemainingSlotTicketCount(currentRoles)
-
-	if err := addPlus5SlotTicketRole(s, guildID, userID, currentCount, currentRoles); err != nil {
-		return errors.NewError("チケットロールを更新できません", err)
+	for _, role := range currentRoles {
+		if afterRoleID, ok := FiveAddedRole[role]; ok {
+			// 現在のロールを削除します
+			if err := s.GuildMemberRoleRemove(guildID, userID, role); err != nil {
+				return errors.NewError("現在の回数ロールを削除できません", err)
+			}
+			// 新規ロールを付与します
+			if err := s.GuildMemberRoleAdd(guildID, userID, afterRoleID); err != nil {
+				return errors.NewError("新規の回数ロールを付与できません", err)
+			}
+		}
 	}
 
 	return nil
 }
 
-// 現在のスロットチケットの残り回数と、現在のスロットチケットロールを取得します
-func getRemainingSlotTicketCount(roles []string) (int, []string) {
-	currentCount := 0 // 現在のスロットチケットの残り回数
-	currentRoles := make([]string, 0)
+// チケットロールかどうかを判定します
+func IsSlotTicketRoleContainsAddedRole(roleID string) bool {
+	switch roleID {
+	case id.RoleID().SLOT_1_TICKET,
+		id.RoleID().SLOT_2_TICKET,
+		id.RoleID().SLOT_3_TICKET,
+		id.RoleID().SLOT_4_TICKET,
+		id.RoleID().SLOT_5_TICKET,
+		id.RoleID().SLOT_6_TICKET,
+		id.RoleID().SLOT_7_TICKET,
+		id.RoleID().SLOT_8_TICKET,
+		id.RoleID().SLOT_9_TICKET,
+		id.RoleID().SLOT_10_TICKET,
+		id.RoleID().SLOT_11_TICKET,
+		id.RoleID().SLOT_12_TICKET,
+		id.RoleID().SLOT_13_TICKET,
+		id.RoleID().SLOT_14_TICKET,
+		id.RoleID().SLOT_15_TICKET,
+		id.RoleID().SLOT_ADDED:
 
-	for _, role := range roles {
-		switch role {
-		case id.RoleID().SLOT_1_TICKET:
-			currentCount += 1
-			currentRoles = append(currentRoles, role)
-		case id.RoleID().SLOT_2_TICKET:
-			currentCount += 2
-			currentRoles = append(currentRoles, role)
-		case id.RoleID().SLOT_3_TICKET:
-			currentCount += 3
-			currentRoles = append(currentRoles, role)
-		case id.RoleID().SLOT_4_TICKET:
-			currentCount += 4
-			currentRoles = append(currentRoles, role)
-		case id.RoleID().SLOT_5_TICKET:
-			currentCount += 5
-			currentRoles = append(currentRoles, role)
-		case id.RoleID().SLOT_10_TICKET:
-			currentCount += 10
-			currentRoles = append(currentRoles, role)
-		case id.RoleID().SLOT_15_TICKET:
-			currentCount += 15
-			currentRoles = append(currentRoles, role)
-		}
+		return true
 	}
 
-	return currentCount, currentRoles
+	return false
 }
 
-// 現在の残回数に5回追加したロールを付与します
-//
-// 既存の回数ロールは削除します。
-func addPlus5SlotTicketRole(
-	s *discordgo.Session,
-	guildID string,
-	userID string,
-	currentCount int,
-	currentRoles []string,
-) error {
-	// 既存の回数ロールは削除します
-	for _, currentRole := range currentRoles {
-		if err := s.GuildMemberRoleRemove(guildID, userID, currentRole); err != nil {
-			return errors.NewError("ロールを削除できません", err)
-		}
+// 当たりロールかどうかを判定します
+func IsAtariRole(roleID string) bool {
+	switch roleID {
+	case id.RoleID().ATARI_1,
+		id.RoleID().ATARI_2,
+		id.RoleID().ATARI_3,
+		id.RoleID().ATARI_4,
+		id.RoleID().ATARI_5,
+		id.RoleID().ATARI_6,
+		id.RoleID().ATARI_7,
+		id.RoleID().ATARI_8,
+		id.RoleID().ATARI_9,
+		id.RoleID().ATARI_10:
+
+		return true
 	}
 
-	// 新規追加ロールを算出します
-	addRoleIDs := make([]string, 0)
-
-	switch currentCount {
-	case 0:
-		addRoleIDs = []string{id.RoleID().SLOT_5_TICKET}
-	case 1:
-		addRoleIDs = []string{id.RoleID().SLOT_5_TICKET, id.RoleID().SLOT_1_TICKET}
-	case 2:
-		addRoleIDs = []string{id.RoleID().SLOT_5_TICKET, id.RoleID().SLOT_2_TICKET}
-	case 3:
-		addRoleIDs = []string{id.RoleID().SLOT_5_TICKET, id.RoleID().SLOT_3_TICKET}
-	case 4:
-		addRoleIDs = []string{id.RoleID().SLOT_5_TICKET, id.RoleID().SLOT_4_TICKET}
-	case 5:
-		addRoleIDs = []string{id.RoleID().SLOT_10_TICKET}
-	case 6:
-		addRoleIDs = []string{id.RoleID().SLOT_10_TICKET, id.RoleID().SLOT_1_TICKET}
-	case 7:
-		addRoleIDs = []string{id.RoleID().SLOT_10_TICKET, id.RoleID().SLOT_2_TICKET}
-	case 8:
-		addRoleIDs = []string{id.RoleID().SLOT_10_TICKET, id.RoleID().SLOT_3_TICKET}
-	case 9:
-		addRoleIDs = []string{id.RoleID().SLOT_10_TICKET, id.RoleID().SLOT_4_TICKET}
-	case 10:
-		addRoleIDs = []string{id.RoleID().SLOT_15_TICKET}
-	case 11, 12, 13, 14, 15:
-		addRoleIDs = []string{id.RoleID().SLOT_15_TICKET}
-	}
-
-	// ロールを新規追加します
-	for _, addRoleID := range addRoleIDs {
-		if err := s.GuildMemberRoleAdd(guildID, userID, addRoleID); err != nil {
-			return errors.NewError("ロールを付与できません", err)
-		}
-	}
-
-	return nil
+	return false
 }

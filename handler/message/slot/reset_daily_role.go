@@ -5,6 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"github.com/techstart35/kifuneso-bot/internal/id"
+	"github.com/techstart35/kifuneso-bot/internal/slot"
 )
 
 // 全てのSlot回数券をリセットし、5回券を全員に付与します
@@ -27,18 +28,9 @@ func ResetAndAddDailyRole(s *discordgo.Session, m *discordgo.MessageCreate) erro
 	}
 
 	for i, user := range users {
-		// ユーザーからSlotの回数券ロールを削除します
-		roleIDs := id.RoleID()
+		// ユーザーからSlotの回数券ロールとAddedロールを削除します
 		for _, role := range user.Roles {
-			switch role {
-			case roleIDs.SLOT_1_TICKET,
-				roleIDs.SLOT_2_TICKET,
-				roleIDs.SLOT_3_TICKET,
-				roleIDs.SLOT_4_TICKET,
-				roleIDs.SLOT_10_TICKET,
-				roleIDs.SLOT_15_TICKET,
-				roleIDs.SLOT_ADDED:
-
+			if slot.IsSlotTicketRoleContainsAddedRole(role) {
 				if err = s.GuildMemberRoleRemove(m.GuildID, user.User.ID, role); err != nil {
 					return errors.NewError("ロールを付与できません", err)
 				}

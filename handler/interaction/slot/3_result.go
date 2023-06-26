@@ -96,62 +96,25 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 
 // 大当たりロールを更新します
 func updateBigPrizeRole(s *discordgo.Session, i *discordgo.InteractionCreate) error {
-	currentPrizeCount := 0                 // 現状の当たり回数ロールの得点数
-	currentPrizeRoles := make([]string, 0) // 現在の当たりロール
+	for _, currentAtariRole := range i.Member.Roles {
+		// 現在1-9当たりの場合はロールの更新あり
+		if newAtariRole, ok := slot.NewAtariRole[currentAtariRole]; ok {
+			// 現在の当たりロールを削除
+			if err := s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentAtariRole); err != nil {
+				return errors.NewError("ロールを削除できません", err)
+			}
+			// 新しい当たりロールを付与
+			if err := s.GuildMemberRoleAdd(i.GuildID, i.Member.User.ID, newAtariRole); err != nil {
+				return errors.NewError("ロールを削除できません", err)
+			}
 
-	for _, role := range i.Member.Roles {
-		switch role {
-		case id.RoleID().ATARI_1,
-			id.RoleID().ATARI_2,
-			id.RoleID().ATARI_3,
-			id.RoleID().ATARI_4,
-			id.RoleID().LV_1,
-			id.RoleID().LV_5,
-			id.RoleID().LV_10:
-
-			currentPrizeCount++
-			currentPrizeRoles = append(currentPrizeRoles, role)
+			return nil
 		}
 	}
 
-	// 現在の当たり,Lvロールを削除
-	for _, currentPrizeRole := range currentPrizeRoles {
-		if err := s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentPrizeRole); err != nil {
-			return errors.NewError("ロールを削除できません", err)
-		}
-	}
-
-	// 新規追加ロールを算出します
-	addRoleIDs := make([]string, 0)
-
-	switch currentPrizeCount {
-	case 0:
-		addRoleIDs = []string{id.RoleID().LV_1}
-	case 1:
-		addRoleIDs = []string{id.RoleID().LV_1, id.RoleID().ATARI_1}
-	case 2:
-		addRoleIDs = []string{id.RoleID().LV_1, id.RoleID().ATARI_2}
-	case 3:
-		addRoleIDs = []string{id.RoleID().LV_1, id.RoleID().ATARI_3}
-	case 4:
-		addRoleIDs = []string{id.RoleID().LV_5}
-	case 5:
-		addRoleIDs = []string{id.RoleID().LV_5, id.RoleID().ATARI_1}
-	case 6:
-		addRoleIDs = []string{id.RoleID().LV_5, id.RoleID().ATARI_2}
-	case 7:
-		addRoleIDs = []string{id.RoleID().LV_5, id.RoleID().ATARI_3}
-	case 8:
-		addRoleIDs = []string{id.RoleID().LV_5, id.RoleID().ATARI_4}
-	case 9:
-		addRoleIDs = []string{id.RoleID().LV_10}
-	}
-
-	// ロールを新規追加します
-	for _, addRoleID := range addRoleIDs {
-		if err := s.GuildMemberRoleAdd(i.GuildID, i.Member.User.ID, addRoleID); err != nil {
-			return errors.NewError("ロールを付与できません", err)
-		}
+	// 初めての当たりの場合は、当たり1を付与
+	if err := s.GuildMemberRoleAdd(i.GuildID, i.Member.User.ID, id.RoleID().ATARI_1); err != nil {
+		return errors.NewError("ロールを削除できません", err)
 	}
 
 	return nil
