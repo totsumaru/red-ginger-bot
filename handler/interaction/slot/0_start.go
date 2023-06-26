@@ -45,7 +45,7 @@ func SendStartMessage(
 `
 
 	embed := &discordgo.MessageEmbed{
-		Title:       "ERROR",
+		Title:       Title,
 		Description: description,
 		Color:       color.Red,
 	}
@@ -95,7 +95,7 @@ func sendNotHaveTicketErrorMessage(s *discordgo.Session, i *discordgo.Interactio
 `
 
 	embed := &discordgo.MessageEmbed{
-		Title:       Title,
+		Title:       "ERROR",
 		Description: fmt.Sprintf(description, id.ChannelID().JP_CHAT),
 		Color:       color.Red,
 	}
