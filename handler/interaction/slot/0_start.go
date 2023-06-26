@@ -1,9 +1,11 @@
 package slot
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
+	"github.com/techstart35/kifuneso-bot/internal/id"
 	"github.com/techstart35/kifuneso-bot/internal/slot"
 )
 
@@ -43,7 +45,7 @@ func SendStartMessage(
 `
 
 	embed := &discordgo.MessageEmbed{
-		Title:       Title,
+		Title:       "ERROR",
 		Description: description,
 		Color:       color.Red,
 	}
@@ -88,11 +90,13 @@ func sendNotHaveTicketErrorMessage(s *discordgo.Session, i *discordgo.Interactio
 
 - 毎日5回分のチケットがもらえます
 - どこかのチャンネルでコメントすると、さらに5回分のチケットがもらえます（1日1回まで）
+
+本日まだコメントしていない人は、ぜひ <#%s> でコメントしてみてください！
 `
 
 	embed := &discordgo.MessageEmbed{
 		Title:       Title,
-		Description: description,
+		Description: fmt.Sprintf(description, id.ChannelID().JP_CHAT),
 		Color:       color.Red,
 	}
 
