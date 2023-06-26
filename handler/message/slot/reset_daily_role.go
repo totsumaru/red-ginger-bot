@@ -1,6 +1,7 @@
 package slot
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"github.com/techstart35/kifuneso-bot/internal/id"
@@ -25,7 +26,7 @@ func ResetAndAddDailyRole(s *discordgo.Session, m *discordgo.MessageCreate) erro
 		return errors.NewError("特定のロールを持つユーザーを取得できません", err)
 	}
 
-	for _, user := range users {
+	for i, user := range users {
 		// ユーザーからSlotの回数券ロールを削除します
 		roleIDs := id.RoleID()
 		for _, role := range user.Roles {
@@ -46,6 +47,13 @@ func ResetAndAddDailyRole(s *discordgo.Session, m *discordgo.MessageCreate) erro
 		// ユーザーに5回券ロールを付与します
 		if err = s.GuildMemberRoleAdd(m.GuildID, user.User.ID, id.RoleID().SLOT_5_TICKET); err != nil {
 			return errors.NewError("ロールを付与できません", err)
+		}
+
+		if i%50 == 0 {
+			// 途中経過メッセージを送信
+			if _, err = s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%d件の処理が完了しています", i)); err != nil {
+				return errors.NewError("完了メッセージを送信できません", err)
+			}
 		}
 	}
 
