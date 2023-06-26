@@ -24,7 +24,7 @@ func AddFiveTicketRole(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	}
 
 	// チケットロールを更新します
-	if err := slot.UpdateRoleToPlus5(s, m); err != nil {
+	if err := slot.UpdateRoleToPlus5(s, m.GuildID, m.Author.ID, m.Member.Roles); err != nil {
 		return errors.NewError("チケットロールを更新できません", err)
 	}
 
