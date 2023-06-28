@@ -114,6 +114,10 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			"🍒が出たからもう一回遊べるよ！",
 			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
+
+		if err := slot.UpdateRoleToPlus1(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
+			return errors.NewError("チェリー当たりでロールを更新できません", err)
+		}
 	case Prize_Secret:
 		embed.Description = fmt.Sprintf(
 			descriptionTmpl,
