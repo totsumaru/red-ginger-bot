@@ -121,11 +121,15 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 	case Prize_Secret:
 		embed.Description = fmt.Sprintf(
 			descriptionTmpl,
-			"超多当たり🎉🎉🎉🎉",
+			"超大当たり🎉🎉🎉🎉\n当たりロールを獲得しました！",
 			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
 		embed.Image = &discordgo.MessageEmbedImage{
-			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881790554689546/RGSLOT_.png",
+			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1123517363992666132/RGSLOT_GAKU.png",
+		}
+
+		if err := slot.UpdateRoleToPlus10(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
+			return errors.NewError("チェリー当たりでロールを更新できません", err)
 		}
 	}
 
