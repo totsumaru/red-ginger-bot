@@ -9,7 +9,7 @@ import (
 
 // 1回目の数字を送信します
 func SendFirstNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error {
-	value := getRandomValue(1, "", "")
+	value := getEachValue(1, "", "")
 
 	actions := discordgo.ActionsRow{
 		Components: []discordgo.MessageComponent{

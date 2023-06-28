@@ -17,7 +17,7 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 	lastDescription = strings.Replace(lastDescription, " ", "", -1)
 	lastValue1 := strings.Split(lastDescription, "｜")[0]
 	lastValue2 := strings.Split(lastDescription, "｜")[1]
-	value := getRandomValue(3, lastValue1, lastValue2)
+	value := getEachValue(3, lastValue1, lastValue2)
 
 	descriptionTmpl := `
 %s
@@ -58,11 +58,11 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 		)
 
 		switch resultStr {
-		case Prize_RedGinGer:
+		case String_RedGinGer:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881805603835976/RGSLOT_REDGINGER.png",
 			}
-		case Prize_BeniShouGa:
+		case String_BeniShouGa:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881823878422669/RGSLOT_.png",
 			}
@@ -79,27 +79,27 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 		)
 
 		switch resultStr {
-		case Prize_Red_3:
+		case String_Red_3:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881687941025792/RGSLOT_RED.png",
 			}
-		case Prize_Gin_3:
+		case String_Gin_3:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881716068045023/RGSLOT_GIN.png",
 			}
-		case Prize_Ger_3:
+		case String_Ger_3:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881739166060644/RGSLOT_GER.png",
 			}
-		case Prize_Beni_3:
+		case String_Beni_3:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881757415493674/RGSLOT_.png",
 			}
-		case Prize_Shou_3:
+		case String_Shou_3:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881775505518612/RGSLOT_.png",
 			}
-		case Prize_Ga_3:
+		case String_Ga_3:
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881790554689546/RGSLOT_.png",
 			}
@@ -114,6 +114,15 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			"🍒が出たからもう一回遊べるよ！",
 			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
+	case Prize_Secret:
+		embed.Description = fmt.Sprintf(
+			descriptionTmpl,
+			"超多当たり🎉🎉🎉🎉",
+			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
+		)
+		embed.Image = &discordgo.MessageEmbedImage{
+			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881790554689546/RGSLOT_.png",
+		}
 	}
 
 	resp := &discordgo.InteractionResponse{

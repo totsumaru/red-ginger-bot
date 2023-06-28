@@ -13,7 +13,7 @@ func SendSecondNumber(s *discordgo.Session, i *discordgo.InteractionCreate) erro
 	lastDescription := strings.Replace(i.Message.Embeds[0].Description, "**", "", -1)
 	lastDescription = strings.Replace(lastDescription, " ", "", -1)
 	lastValue := strings.Split(lastDescription, "｜")[0]
-	value := getRandomValue(2, lastValue, "")
+	value := getEachValue(2, lastValue, "")
 
 	actions := discordgo.ActionsRow{
 		Components: []discordgo.MessageComponent{
