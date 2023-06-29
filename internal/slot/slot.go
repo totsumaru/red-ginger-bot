@@ -113,7 +113,14 @@ func UpdateRoleToPlus1(s *discordgo.Session, guildID, userID string, currentRole
 			if err := s.GuildMemberRoleAdd(guildID, userID, afterRoleID); err != nil {
 				return errors.NewError("新規の回数ロールを付与できません", err)
 			}
+
+			return nil
 		}
+	}
+
+	// 回数ロールを保持していない（使い切った）場合は、+5を付与する
+	if err := s.GuildMemberRoleAdd(guildID, userID, id.RoleID().SLOT_1_TICKET); err != nil {
+		return errors.NewError("新規の回数ロールを付与できません", err)
 	}
 
 	return nil
@@ -131,7 +138,14 @@ func UpdateRoleToPlus5(s *discordgo.Session, guildID, userID string, currentRole
 			if err := s.GuildMemberRoleAdd(guildID, userID, afterRoleID); err != nil {
 				return errors.NewError("新規の回数ロールを付与できません", err)
 			}
+
+			return nil
 		}
+	}
+
+	// 回数ロールを保持していない（使い切った）場合は、+5を付与する
+	if err := s.GuildMemberRoleAdd(guildID, userID, id.RoleID().SLOT_5_TICKET); err != nil {
+		return errors.NewError("新規の回数ロールを付与できません", err)
 	}
 
 	return nil
@@ -149,7 +163,14 @@ func UpdateRoleToPlus10(s *discordgo.Session, guildID, userID string, currentRol
 			if err := s.GuildMemberRoleAdd(guildID, userID, afterRoleID); err != nil {
 				return errors.NewError("新規の回数ロールを付与できません", err)
 			}
+
+			return nil
 		}
+	}
+
+	// 回数ロールを保持していない（使い切った）場合は、+10を付与する
+	if err := s.GuildMemberRoleAdd(guildID, userID, id.RoleID().SLOT_10_TICKET); err != nil {
+		return errors.NewError("新規の回数ロールを付与できません", err)
 	}
 
 	return nil
