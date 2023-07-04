@@ -13,7 +13,7 @@ func SendPrizeInfo(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 （当たりロールGET）
 - RED｜GIN｜GER
 - 紅｜生｜姜
------------------
+
 ☑️小当たり
 （もう5回遊べます。当たりロールは無し）
 - RED｜RED｜RED
@@ -22,7 +22,7 @@ func SendPrizeInfo(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 - 紅｜紅｜紅
 - 生｜生｜生
 - 姜｜姜｜姜
------------------
+
 ☑️その他
 - 🍒が出ると、もう一回遊べます
 -----------------
