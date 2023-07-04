@@ -9,23 +9,21 @@ import (
 // 当たりの情報を送信します
 func SendPrizeInfo(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 	description := `
-**1. 大当たり**
+1. 大当たり
 （当たりロールGET）
-
 - RED｜GIN｜GER
 - 紅｜生｜姜
 -----------------
-**2. 小当たり**
+2. 小当たり
 （もう5回遊べます。当たりロールは無し）
-
 - RED｜RED｜RED
 - GIN｜GIN｜GIN
 - GER｜GER｜GER
 - 紅｜紅｜紅
 - 生｜生｜生
 - 姜｜姜｜姜
-
-**3. その他**
+-----------------
+3. その他
 - 🍒が出ると、もう一回遊べます
 -----------------
 `
