@@ -29,7 +29,6 @@ func SendPrizeInfo(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 `
 
 	embed := &discordgo.MessageEmbed{
-		Title:       Title,
 		Description: description,
 		Color:       color.Red,
 	}
