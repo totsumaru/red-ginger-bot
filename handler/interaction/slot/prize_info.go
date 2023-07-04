@@ -9,7 +9,6 @@ import (
 // 当たりの情報を送信します
 func SendPrizeInfo(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 	description := `
------------------
 **1. 大当たり**
 （当たりロールGET）
 
