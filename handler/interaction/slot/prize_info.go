@@ -25,6 +25,9 @@ func SendPrizeInfo(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 - 紅｜紅｜紅
 - 生｜生｜生
 - 姜｜姜｜姜
+
+**3. その他**
+- 🍒が出ると、もう一回遊べます
 -----------------
 `
 
