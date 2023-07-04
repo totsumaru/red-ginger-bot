@@ -38,6 +38,11 @@ func InteractionCreateHandler(s *discordgo.Session, i *discordgo.InteractionCrea
 				errors.SendErrMsg(s, err, i.Member.User)
 			}
 			return
+		case cmd.Interaction_CustomID_Slot_PrizeInfo:
+			if err := slot.SendPrizeInfo(s, i); err != nil {
+				errors.SendErrMsg(s, err, i.Member.User)
+			}
+			return
 		}
 	}
 }

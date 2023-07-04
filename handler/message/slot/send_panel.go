@@ -15,13 +15,19 @@ import (
 // パネルを更新する場合は、現在のパネルのURLを入れてください。
 func SendPanel(s *discordgo.Session, m *discordgo.MessageCreate, currentPanelURL string) error {
 	btn1 := discordgo.Button{
-		Style:    discordgo.SecondaryButton,
+		Style:    discordgo.PrimaryButton,
 		CustomID: cmd.Interaction_CustomID_Slot_Start,
 		Label:    "スロットを始める",
 	}
 
+	btn2 := discordgo.Button{
+		Style:    discordgo.SecondaryButton,
+		CustomID: cmd.Interaction_CustomID_Slot_PrizeInfo,
+		Label:    "当たりの種類",
+	}
+
 	actions := discordgo.ActionsRow{
-		Components: []discordgo.MessageComponent{btn1},
+		Components: []discordgo.MessageComponent{btn1, btn2},
 	}
 
 	description := `
