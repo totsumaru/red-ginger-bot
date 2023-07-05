@@ -31,7 +31,13 @@ func SendPanel(s *discordgo.Session, m *discordgo.MessageCreate, currentPanelURL
 	}
 
 	description := `
-スロットが回せます！
+毎日スロットが回せます！
+楽しんでください🎉
+
+- 毎日5回遊べます
+- 1回でもコメントをすると、さらに5回遊べます(チャンネルはどこでもOK）
+- 遊べる回数は毎日リセットされます
+- 当たりの種類は下のボタンから確認できます
 `
 
 	embed := &discordgo.MessageEmbed{

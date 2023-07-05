@@ -25,7 +25,6 @@ func SendPrizeInfo(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 
 🎉 **その他**
 - 🍒が出ると、もう一回遊べます
------------------
 `
 
 	embed := &discordgo.MessageEmbed{
