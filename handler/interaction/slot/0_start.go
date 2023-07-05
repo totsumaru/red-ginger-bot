@@ -93,7 +93,7 @@ func sendNotHaveTicketErrorMessage(
 	isUpdateMessage bool,
 ) error {
 	description := `
-本日の回数を使い切ってしまいました🥲
+本日の回数を使い切ってしまいました..
 
 - 毎日5回分のチケットがもらえます
 - どこかのチャンネルでコメントすると、さらに5回分のチケットがもらえます（1日1回まで）
