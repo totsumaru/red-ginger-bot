@@ -42,11 +42,13 @@ func SendStartMessage(
 
 	description := `
 スロットを開始します。
+
+残り回数: **%d**
 `
 
 	embed := &discordgo.MessageEmbed{
 		Title:       Title,
-		Description: description,
+		Description: fmt.Sprintf(description, numOfLeft(i.Member)),
 		Color:       color.Red,
 		Image: &discordgo.MessageEmbedImage{
 			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881161769795714/b57d42376b9173e2.gif",
@@ -125,4 +127,44 @@ func sendNotHaveTicketErrorMessage(
 	}
 
 	return nil
+}
+
+// slotの残り回数を取得します
+func numOfLeft(member *discordgo.Member) int {
+	for _, role := range member.Roles {
+		switch role {
+		case id.RoleID().SLOT_1_TICKET:
+			return 1
+		case id.RoleID().SLOT_2_TICKET:
+			return 2
+		case id.RoleID().SLOT_3_TICKET:
+			return 3
+		case id.RoleID().SLOT_4_TICKET:
+			return 4
+		case id.RoleID().SLOT_5_TICKET:
+			return 5
+		case id.RoleID().SLOT_6_TICKET:
+			return 6
+		case id.RoleID().SLOT_7_TICKET:
+			return 7
+		case id.RoleID().SLOT_8_TICKET:
+			return 8
+		case id.RoleID().SLOT_9_TICKET:
+			return 9
+		case id.RoleID().SLOT_10_TICKET:
+			return 10
+		case id.RoleID().SLOT_11_TICKET:
+			return 11
+		case id.RoleID().SLOT_12_TICKET:
+			return 12
+		case id.RoleID().SLOT_13_TICKET:
+			return 13
+		case id.RoleID().SLOT_14_TICKET:
+			return 14
+		case id.RoleID().SLOT_15_TICKET:
+			return 15
+		}
+	}
+
+	return 0
 }
