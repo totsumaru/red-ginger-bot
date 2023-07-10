@@ -50,6 +50,19 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			"残念！",
 			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
+
+		resp := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Components: []discordgo.MessageComponent{actions},
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Flags:      discordgo.MessageFlagsEphemeral,
+			},
+		}
+
+		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+			return errors.NewError("レスポンスを送信できません", err)
+		}
 	case Prize_Big:
 		embed.Description = fmt.Sprintf(
 			descriptionTmpl,
@@ -66,6 +79,19 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881823878422669/RGSLOT_.png",
 			}
+		}
+
+		resp := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Components: []discordgo.MessageComponent{actions},
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Flags:      discordgo.MessageFlagsEphemeral,
+			},
+		}
+
+		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+			return errors.NewError("レスポンスを送信できません", err)
 		}
 
 		if err := updateBigPrizeRole(s, i); err != nil {
@@ -105,6 +131,19 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			}
 		}
 
+		resp := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Components: []discordgo.MessageComponent{actions},
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Flags:      discordgo.MessageFlagsEphemeral,
+			},
+		}
+
+		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+			return errors.NewError("レスポンスを送信できません", err)
+		}
+
 		if err := slot.UpdateRoleToPlus5(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
 			return errors.NewError("小当たりでロールを更新できません", err)
 		}
@@ -114,6 +153,19 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			"🍒が出たからもう一回遊べるよ！",
 			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
+
+		resp := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Components: []discordgo.MessageComponent{actions},
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Flags:      discordgo.MessageFlagsEphemeral,
+			},
+		}
+
+		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+			return errors.NewError("レスポンスを送信できません", err)
+		}
 
 		if err := slot.UpdateRoleToPlus1(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
 			return errors.NewError("チェリー当たりでロールを更新できません", err)
@@ -128,6 +180,19 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1123517363992666132/RGSLOT_GAKU.png",
 		}
 
+		resp := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Components: []discordgo.MessageComponent{actions},
+				Embeds:     []*discordgo.MessageEmbed{embed},
+				Flags:      discordgo.MessageFlagsEphemeral,
+			},
+		}
+
+		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+			return errors.NewError("レスポンスを送信できません", err)
+		}
+
 		if err := updateBigPrizeRole(s, i); err != nil {
 			return errors.NewError("大当たりロールを更新できません", err)
 		}
@@ -137,18 +202,18 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 		}
 	}
 
-	resp := &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseUpdateMessage,
-		Data: &discordgo.InteractionResponseData{
-			Components: []discordgo.MessageComponent{actions},
-			Embeds:     []*discordgo.MessageEmbed{embed},
-			Flags:      discordgo.MessageFlagsEphemeral,
-		},
-	}
-
-	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-		return errors.NewError("レスポンスを送信できません", err)
-	}
+	//resp := &discordgo.InteractionResponse{
+	//	Type: discordgo.InteractionResponseUpdateMessage,
+	//	Data: &discordgo.InteractionResponseData{
+	//		Components: []discordgo.MessageComponent{actions},
+	//		Embeds:     []*discordgo.MessageEmbed{embed},
+	//		Flags:      discordgo.MessageFlagsEphemeral,
+	//	},
+	//}
+	//
+	//if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+	//	return errors.NewError("レスポンスを送信できません", err)
+	//}
 
 	return nil
 }
