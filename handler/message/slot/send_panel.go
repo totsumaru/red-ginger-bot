@@ -14,6 +14,10 @@ import (
 // 新規でパネルを送信する場合は`currentPanelURL`を空に、
 // パネルを更新する場合は、現在のパネルのURLを入れてください。
 func SendPanel(s *discordgo.Session, m *discordgo.MessageCreate, currentPanelURL string) error {
+	if m.Author.Bot {
+		return nil
+	}
+
 	btn1 := discordgo.Button{
 		Style:    discordgo.PrimaryButton,
 		CustomID: cmd.Interaction_CustomID_Slot_Start,

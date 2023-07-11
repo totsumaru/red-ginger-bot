@@ -11,6 +11,10 @@ import (
 //
 // 1日1回までです。
 func AddFiveTicketRole(s *discordgo.Session, m *discordgo.MessageCreate) error {
+	if m.Author.Bot {
+		return nil
+	}
+
 	// webhook-bot対策として、nilチェックを行います
 	if m.Member == nil {
 		return nil
