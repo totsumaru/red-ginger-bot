@@ -73,16 +73,16 @@ func SendStartMessage(
 		return errors.NewError("レスポンスを送信できません", err)
 	}
 
+	// 現在のチケットロールを削除します
+	if err := s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentTicketRole); err != nil {
+		return errors.NewError("現在の回数ロールを削除できません", err)
+	}
+
 	// まだチケットが残っている場合は新規ロールを付与します
 	if newRoleID, ok := slot.MinusTicketRole[currentTicketRole]; ok {
 		if err := s.GuildMemberRoleAdd(i.GuildID, i.Member.User.ID, newRoleID); err != nil {
 			return errors.NewError("新規の回数ロールを付与できません", err)
 		}
-	}
-
-	// 現在のチケットロールを削除します
-	if err := s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentTicketRole); err != nil {
-		return errors.NewError("現在の回数ロールを削除できません", err)
 	}
 
 	return nil
