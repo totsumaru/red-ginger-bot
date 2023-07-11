@@ -69,13 +69,13 @@ func SendStartMessage(
 		},
 	}
 
-	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-		return errors.NewError("レスポンスを送信できません", err)
-	}
-
 	// 現在のチケットロールを削除します
 	if err := s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentTicketRole); err != nil {
 		return errors.NewError("現在の回数ロールを削除できません", err)
+	}
+
+	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+		return errors.NewError("レスポンスを送信できません", err)
 	}
 
 	// まだチケットが残っている場合は新規ロールを付与します
