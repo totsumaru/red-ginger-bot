@@ -44,16 +44,8 @@ __**🔸 RGの画像を使いたい**__
 ツイートなど、RGの画像を使用したい場合は <#%s>からご使用ください。
 ※転用,悪用厳禁
 
-> 2. Official links
-
-- **公式Twitter**
-https://twitter.com/REDGINGER_Games
-
-- **White Paper**
-https://onl.sc/QiQVqN1
-
-- **ATUM NFT（OpenSea）**
-https://opensea.io/collection/atum-1 
+__**🔸 公式リンク**__
+<#%s> から確認してください。
 `
 
 	embed := &discordgo.MessageEmbed{
@@ -64,6 +56,7 @@ https://opensea.io/collection/atum-1
 				id.ChannelID().CHARACTER,
 				id.ChannelID().TEAM_MEMBER,
 				id.ChannelID().SOZAI,
+				id.ChannelID().OFFICIAL_LINKS,
 			),
 		),
 		Author: &discordgo.MessageEmbedAuthor{
