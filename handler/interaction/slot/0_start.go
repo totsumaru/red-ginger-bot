@@ -31,7 +31,7 @@ func SendStartMessage(
 
 	// チケットを持っていない場合はエラーを送信して終了
 	if currentTicketRole == "" {
-		if err := sendNotHaveTicketErrorMessage(s, i, isUpdateMessage); err != nil {
+		if err = sendNotHaveTicketErrorMessage(i, editFunc); err != nil {
 			return errors.NewError("チケット未保持メッセージを送信できません", err)
 		}
 
@@ -86,9 +86,8 @@ func SendStartMessage(
 
 // チケットを保持していないエラーメッセージを送信します
 func sendNotHaveTicketErrorMessage(
-	s *discordgo.Session,
 	i *discordgo.InteractionCreate,
-	isUpdateMessage bool,
+	editFunc utils.EditFunc,
 ) error {
 	description := `
 本日の回数を使い切ってしまいました..
@@ -105,20 +104,10 @@ func sendNotHaveTicketErrorMessage(
 		Color:       color.Red,
 	}
 
-	responseType := discordgo.InteractionResponseChannelMessageWithSource
-	if isUpdateMessage {
-		responseType = discordgo.InteractionResponseUpdateMessage
+	webhook := &discordgo.WebhookEdit{
+		Embeds: &[]*discordgo.MessageEmbed{embed},
 	}
-
-	resp := &discordgo.InteractionResponse{
-		Type: responseType,
-		Data: &discordgo.InteractionResponseData{
-			Embeds: []*discordgo.MessageEmbed{embed},
-			Flags:  discordgo.MessageFlagsEphemeral,
-		},
-	}
-
-	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+	if _, err := editFunc(i.Interaction, webhook); err != nil {
 		return errors.NewError("レスポンスを送信できません", err)
 	}
 

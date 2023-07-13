@@ -6,7 +6,7 @@ import (
 )
 
 // レスポンスのEdit関数を返します
-type editFunc func(interaction *discordgo.Interaction, newresp *discordgo.WebhookEdit) (*discordgo.Message, error)
+type EditFunc func(interaction *discordgo.Interaction, newresp *discordgo.WebhookEdit) (*discordgo.Message, error)
 
 // Interactionのdeferメッセージを送信します
 func SendInteractionWaitingMessage(
@@ -14,7 +14,7 @@ func SendInteractionWaitingMessage(
 	i *discordgo.InteractionCreate,
 	isUpdate bool,
 	isEphemeral bool,
-) (editFunc, error) {
+) (EditFunc, error) {
 	responseType := discordgo.InteractionResponseDeferredChannelMessageWithSource
 	if isUpdate {
 		responseType = discordgo.InteractionResponseDeferredMessageUpdate
