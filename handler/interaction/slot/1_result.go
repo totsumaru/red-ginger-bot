@@ -10,7 +10,8 @@ import (
 
 // 1回目の数字を送信します
 func SendFirstNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error {
-	if err := utils.SendInteractionWaitingMessage(s, i, true); err != nil {
+	editFunc, err := utils.SendInteractionWaitingMessage(s, i, true, true)
+	if err != nil {
 		return errors.NewError("Waitingメッセージが送信できません")
 	}
 
@@ -30,16 +31,11 @@ func SendFirstNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 		Color:       color.Red,
 	}
 
-	resp := &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseUpdateMessage,
-		Data: &discordgo.InteractionResponseData{
-			Embeds:     []*discordgo.MessageEmbed{embed},
-			Components: []discordgo.MessageComponent{actions},
-			Flags:      discordgo.MessageFlagsEphemeral,
-		},
+	webhook := &discordgo.WebhookEdit{
+		Embeds:     &[]*discordgo.MessageEmbed{embed},
+		Components: &[]discordgo.MessageComponent{actions},
 	}
-
-	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+	if _, err = editFunc(i.Interaction, webhook); err != nil {
 		return errors.NewError("レスポンスを送信できません", err)
 	}
 

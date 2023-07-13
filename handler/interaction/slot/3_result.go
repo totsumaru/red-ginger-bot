@@ -14,7 +14,8 @@ import (
 
 // 3回目の数字を送信します
 func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error {
-	if err := utils.SendInteractionWaitingMessage(s, i, true); err != nil {
+	editFunc, err := utils.SendInteractionWaitingMessage(s, i, true, true)
+	if err != nil {
 		return errors.NewError("Waitingメッセージが送信できません")
 	}
 
@@ -133,25 +134,20 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1123517363992666132/RGSLOT_GAKU.png",
 		}
 
-		if err := updateBigPrizeRole(s, i); err != nil {
+		if err = updateBigPrizeRole(s, i); err != nil {
 			return errors.NewError("大当たりロールを更新できません", err)
 		}
 
-		if err := slot.UpdateRoleToPlus10(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
+		if err = slot.UpdateRoleToPlus10(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
 			return errors.NewError("???で+10回券ロールを更新できません", err)
 		}
 	}
 
-	resp := &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseUpdateMessage,
-		Data: &discordgo.InteractionResponseData{
-			Components: []discordgo.MessageComponent{actions},
-			Embeds:     []*discordgo.MessageEmbed{embed},
-			Flags:      discordgo.MessageFlagsEphemeral,
-		},
+	webhook := &discordgo.WebhookEdit{
+		Embeds:     &[]*discordgo.MessageEmbed{embed},
+		Components: &[]discordgo.MessageComponent{actions},
 	}
-
-	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+	if _, err = editFunc(i.Interaction, webhook); err != nil {
 		return errors.NewError("レスポンスを送信できません", err)
 	}
 

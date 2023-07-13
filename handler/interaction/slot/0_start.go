@@ -16,7 +16,8 @@ func SendStartMessage(
 	i *discordgo.InteractionCreate,
 	isUpdateMessage bool,
 ) error {
-	if err := utils.SendInteractionWaitingMessage(s, i, isUpdateMessage); err != nil {
+	editFunc, err := utils.SendInteractionWaitingMessage(s, i, isUpdateMessage, true)
+	if err != nil {
 		return errors.NewError("Waitingメッセージが送信できません")
 	}
 
@@ -60,22 +61,8 @@ func SendStartMessage(
 		},
 	}
 
-	responseType := discordgo.InteractionResponseChannelMessageWithSource
-	if isUpdateMessage {
-		responseType = discordgo.InteractionResponseUpdateMessage
-	}
-
-	resp := &discordgo.InteractionResponse{
-		Type: responseType,
-		Data: &discordgo.InteractionResponseData{
-			Embeds:     []*discordgo.MessageEmbed{embed},
-			Components: []discordgo.MessageComponent{actions},
-			Flags:      discordgo.MessageFlagsEphemeral,
-		},
-	}
-
 	// 現在のチケットロールを削除します
-	if err := s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentTicketRole); err != nil {
+	if err = s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentTicketRole); err != nil {
 		return errors.NewError("現在の回数ロールを削除できません", err)
 	}
 
@@ -86,7 +73,11 @@ func SendStartMessage(
 		}
 	}
 
-	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+	webhook := &discordgo.WebhookEdit{
+		Embeds:     &[]*discordgo.MessageEmbed{embed},
+		Components: &[]discordgo.MessageComponent{actions},
+	}
+	if _, err = editFunc(i.Interaction, webhook); err != nil {
 		return errors.NewError("レスポンスを送信できません", err)
 	}
 
