@@ -104,8 +104,10 @@ func sendNotHaveTicketErrorMessage(
 		Color:       color.Red,
 	}
 
+	components := make([]discordgo.MessageComponent, 0)
 	webhook := &discordgo.WebhookEdit{
-		Embeds: &[]*discordgo.MessageEmbed{embed},
+		Embeds:     &[]*discordgo.MessageEmbed{embed},
+		Components: &components,
 	}
 	if _, err := editFunc(i.Interaction, webhook); err != nil {
 		return errors.NewError("レスポンスを送信できません", err)

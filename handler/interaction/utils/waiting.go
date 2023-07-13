@@ -22,9 +22,6 @@ func SendInteractionWaitingMessage(
 
 	resp := &discordgo.InteractionResponse{
 		Type: responseType,
-		Data: &discordgo.InteractionResponseData{
-			Components: []discordgo.MessageComponent{},
-		},
 	}
 
 	if isEphemeral {
