@@ -8,9 +8,9 @@ func SendInteractionWaitingMessage(
 	i *discordgo.InteractionCreate,
 	isUpdate bool,
 ) error {
-	responseType := discordgo.InteractionResponseChannelMessageWithSource
+	responseType := discordgo.InteractionResponseDeferredChannelMessageWithSource
 	if isUpdate {
-		responseType = discordgo.InteractionResponseUpdateMessage
+		responseType = discordgo.InteractionResponseDeferredMessageUpdate
 	}
 
 	resp := &discordgo.InteractionResponse{
