@@ -3,12 +3,17 @@ package slot
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/handler/interaction/utils"
 	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 )
 
 // 1回目の数字を送信します
 func SendFirstNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error {
+	if err := utils.SendInteractionWaitingMessage(s, i, true); err != nil {
+		return errors.NewError("Waitingメッセージが送信できません")
+	}
+
 	value := getEachValue(1, "", "")
 
 	actions := discordgo.ActionsRow{

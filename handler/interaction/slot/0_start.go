@@ -3,6 +3,7 @@ package slot
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/handler/interaction/utils"
 	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"github.com/techstart35/kifuneso-bot/internal/id"
@@ -15,6 +16,10 @@ func SendStartMessage(
 	i *discordgo.InteractionCreate,
 	isUpdateMessage bool,
 ) error {
+	if err := utils.SendInteractionWaitingMessage(s, i, isUpdateMessage); err != nil {
+		return errors.NewError("Waitingメッセージが送信できません")
+	}
+
 	var currentTicketRole string
 
 	for _, role := range i.Member.Roles {

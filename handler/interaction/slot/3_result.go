@@ -3,6 +3,7 @@ package slot
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/handler/interaction/utils"
 	"github.com/techstart35/kifuneso-bot/internal/cmd"
 	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
@@ -13,6 +14,10 @@ import (
 
 // 3回目の数字を送信します
 func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error {
+	if err := utils.SendInteractionWaitingMessage(s, i, true); err != nil {
+		return errors.NewError("Waitingメッセージが送信できません")
+	}
+
 	lastDescription := strings.Replace(i.Message.Embeds[0].Description, "**", "", -1)
 	lastDescription = strings.Replace(lastDescription, " ", "", -1)
 	lastValue1 := strings.Split(lastDescription, "｜")[0]
@@ -50,19 +55,6 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			"残念！",
 			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
-
-		resp := &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: &discordgo.InteractionResponseData{
-				Components: []discordgo.MessageComponent{actions},
-				Embeds:     []*discordgo.MessageEmbed{embed},
-				Flags:      discordgo.MessageFlagsEphemeral,
-			},
-		}
-
-		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-			return errors.NewError("レスポンスを送信できません", err)
-		}
 	case Prize_Big:
 		embed.Description = fmt.Sprintf(
 			descriptionTmpl,
@@ -79,19 +71,6 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1122881823878422669/RGSLOT_.png",
 			}
-		}
-
-		resp := &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: &discordgo.InteractionResponseData{
-				Components: []discordgo.MessageComponent{actions},
-				Embeds:     []*discordgo.MessageEmbed{embed},
-				Flags:      discordgo.MessageFlagsEphemeral,
-			},
-		}
-
-		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-			return errors.NewError("レスポンスを送信できません", err)
 		}
 
 		if err := updateBigPrizeRole(s, i); err != nil {
@@ -131,19 +110,6 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			}
 		}
 
-		resp := &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: &discordgo.InteractionResponseData{
-				Components: []discordgo.MessageComponent{actions},
-				Embeds:     []*discordgo.MessageEmbed{embed},
-				Flags:      discordgo.MessageFlagsEphemeral,
-			},
-		}
-
-		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-			return errors.NewError("レスポンスを送信できません", err)
-		}
-
 		if err := slot.UpdateRoleToPlus5(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
 			return errors.NewError("小当たりでロールを更新できません", err)
 		}
@@ -153,19 +119,6 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			"🍒が出たからもう一回遊べるよ！",
 			fmt.Sprintf(DescriptionTmpl, lastValue1, lastValue2, value),
 		)
-
-		resp := &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: &discordgo.InteractionResponseData{
-				Components: []discordgo.MessageComponent{actions},
-				Embeds:     []*discordgo.MessageEmbed{embed},
-				Flags:      discordgo.MessageFlagsEphemeral,
-			},
-		}
-
-		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-			return errors.NewError("レスポンスを送信できません", err)
-		}
 
 		if err := slot.UpdateRoleToPlus1(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
 			return errors.NewError("チェリー当たりでロールを更新できません", err)
@@ -180,19 +133,6 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1123517363992666132/RGSLOT_GAKU.png",
 		}
 
-		resp := &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: &discordgo.InteractionResponseData{
-				Components: []discordgo.MessageComponent{actions},
-				Embeds:     []*discordgo.MessageEmbed{embed},
-				Flags:      discordgo.MessageFlagsEphemeral,
-			},
-		}
-
-		if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-			return errors.NewError("レスポンスを送信できません", err)
-		}
-
 		if err := updateBigPrizeRole(s, i); err != nil {
 			return errors.NewError("大当たりロールを更新できません", err)
 		}
@@ -202,18 +142,18 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 		}
 	}
 
-	//resp := &discordgo.InteractionResponse{
-	//	Type: discordgo.InteractionResponseUpdateMessage,
-	//	Data: &discordgo.InteractionResponseData{
-	//		Components: []discordgo.MessageComponent{actions},
-	//		Embeds:     []*discordgo.MessageEmbed{embed},
-	//		Flags:      discordgo.MessageFlagsEphemeral,
-	//	},
-	//}
-	//
-	//if err := s.InteractionRespond(i.Interaction, resp); err != nil {
-	//	return errors.NewError("レスポンスを送信できません", err)
-	//}
+	resp := &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseUpdateMessage,
+		Data: &discordgo.InteractionResponseData{
+			Components: []discordgo.MessageComponent{actions},
+			Embeds:     []*discordgo.MessageEmbed{embed},
+			Flags:      discordgo.MessageFlagsEphemeral,
+		},
+	}
+
+	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+		return errors.NewError("レスポンスを送信できません", err)
+	}
 
 	return nil
 }
