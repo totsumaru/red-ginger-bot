@@ -30,8 +30,14 @@ func SendPanel(s *discordgo.Session, m *discordgo.MessageCreate, currentPanelURL
 		Label:    "当たりの種類",
 	}
 
+	btn3 := discordgo.Button{
+		Style: discordgo.LinkButton,
+		Label: "景品",
+		URL:   "https://discord.com/channels/1047763497594933319/1129212318971080714/1129212966340931624",
+	}
+
 	actions := discordgo.ActionsRow{
-		Components: []discordgo.MessageComponent{btn1, btn2},
+		Components: []discordgo.MessageComponent{btn1, btn2, btn3},
 	}
 
 	description := `
