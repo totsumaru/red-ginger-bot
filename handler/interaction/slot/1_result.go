@@ -3,18 +3,12 @@ package slot
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/techstart35/kifuneso-bot/handler/interaction/utils"
 	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 )
 
 // 1回目の数字を送信します
 func SendFirstNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error {
-	editFunc, err := utils.SendInteractionWaitingMessage(s, i, true, true)
-	if err != nil {
-		return errors.NewError("Waitingメッセージが送信できません")
-	}
-
 	value := getEachValue(1, "", "")
 
 	actions := discordgo.ActionsRow{
@@ -31,11 +25,16 @@ func SendFirstNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 		Color:       color.Red,
 	}
 
-	webhook := &discordgo.WebhookEdit{
-		Embeds:     &[]*discordgo.MessageEmbed{embed},
-		Components: &[]discordgo.MessageComponent{actions},
+	resp := &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseUpdateMessage,
+		Data: &discordgo.InteractionResponseData{
+			Embeds:     []*discordgo.MessageEmbed{embed},
+			Flags:      discordgo.MessageFlagsEphemeral,
+			Components: []discordgo.MessageComponent{actions},
+		},
 	}
-	if _, err = editFunc(i.Interaction, webhook); err != nil {
+
+	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
 		return errors.NewError("レスポンスを送信できません", err)
 	}
 

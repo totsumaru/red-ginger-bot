@@ -17,12 +17,18 @@ func SendInteractionWaitingMessage(
 ) (EditFunc, error) {
 	responseType := discordgo.InteractionResponseDeferredChannelMessageWithSource
 	if isUpdate {
-		responseType = discordgo.InteractionResponseDeferredMessageUpdate
+		responseType = discordgo.InteractionResponseUpdateMessage
+	}
+
+	embed := &discordgo.MessageEmbed{
+		Description: "処理中...",
 	}
 
 	resp := &discordgo.InteractionResponse{
 		Type: responseType,
-		Data: &discordgo.InteractionResponseData{}, // isEphemeralの値を入れるためnilにしない
+		Data: &discordgo.InteractionResponseData{
+			Embeds: []*discordgo.MessageEmbed{embed},
+		}, // isEphemeralの値を入れるためDataのフィールドは定義しておく
 	}
 
 	if isEphemeral {
