@@ -74,8 +74,13 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			}
 		}
 
-		if err := updateBigPrizeRole(s, i); err != nil {
+		newRoleID, err := updateBigPrizeRole(s, i)
+		if err != nil {
 			return errors.NewError("大当たりロールを更新できません", err)
+		}
+
+		if err = NoticeAtariToAdmin(s, i, newRoleID); err != nil {
+			return errors.NewError("MODチャンネルに通知を送信できません", err)
 		}
 	case Prize_Small:
 		embed.Description = fmt.Sprintf(
@@ -134,12 +139,17 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1123517363992666132/RGSLOT_GAKU.png",
 		}
 
-		if err = updateBigPrizeRole(s, i); err != nil {
+		newRoleID, err := updateBigPrizeRole(s, i)
+		if err != nil {
 			return errors.NewError("大当たりロールを更新できません", err)
 		}
 
 		if err = slot.UpdateRoleToPlus10(s, i.GuildID, i.Member.User.ID, i.Member.Roles); err != nil {
 			return errors.NewError("???で+10回券ロールを更新できません", err)
+		}
+
+		if err = NoticeAtariToAdmin(s, i, newRoleID); err != nil {
+			return errors.NewError("MODチャンネルに通知を送信できません", err)
 		}
 	}
 
@@ -155,26 +165,63 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 }
 
 // 大当たりロールを更新します
-func updateBigPrizeRole(s *discordgo.Session, i *discordgo.InteractionCreate) error {
+//
+// 新しい当たりロールIDを返します。
+func updateBigPrizeRole(s *discordgo.Session, i *discordgo.InteractionCreate) (string, error) {
 	for _, currentAtariRole := range i.Member.Roles {
 		// 現在1-9当たりの場合はロールの更新あり
 		if newAtariRole, ok := slot.NewAtariRole[currentAtariRole]; ok {
 			// 現在の当たりロールを削除
 			if err := s.GuildMemberRoleRemove(i.GuildID, i.Member.User.ID, currentAtariRole); err != nil {
-				return errors.NewError("ロールを削除できません", err)
+				return "", errors.NewError("ロールを削除できません", err)
 			}
 			// 新しい当たりロールを付与
 			if err := s.GuildMemberRoleAdd(i.GuildID, i.Member.User.ID, newAtariRole); err != nil {
-				return errors.NewError("ロールを削除できません", err)
+				return "", errors.NewError("ロールを削除できません", err)
 			}
 
-			return nil
+			return newAtariRole, nil
 		}
 	}
 
 	// 初めての当たりの場合は、当たり1を付与
 	if err := s.GuildMemberRoleAdd(i.GuildID, i.Member.User.ID, id.RoleID().ATARI_1); err != nil {
-		return errors.NewError("ロールを削除できません", err)
+		return "", errors.NewError("ロールを削除できません", err)
+	}
+
+	return id.RoleID().ATARI_1, nil
+}
+
+// 当たり通知を管理者向けに送信します
+func NoticeAtariToAdmin(
+	s *discordgo.Session,
+	i *discordgo.InteractionCreate,
+	newAtariRoleID string,
+) error {
+	description := `
+**Slot当たり通知**
+
+- %d回目
+- <@%s>
+`
+
+	count := 0
+	switch newAtariRoleID {
+	case id.RoleID().ATARI_3:
+		count = 3
+	}
+
+	embed := &discordgo.MessageEmbed{
+		Description: fmt.Sprintf(description, count, i.Member.User.ID),
+		Color:       color.Yellow,
+		Author: &discordgo.MessageEmbedAuthor{
+			IconURL: i.Member.User.AvatarURL(""),
+			Name:    i.Member.User.Username,
+		},
+	}
+
+	if _, err := s.ChannelMessageSendEmbed(id.ChannelID().MOD, embed); err != nil {
+		return errors.NewError("MODチャンネルにメッセージを送信できません", err)
 	}
 
 	return nil
