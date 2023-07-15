@@ -50,7 +50,6 @@ __**🔸 公式リンク**__
 				tmpl,
 				id.ChannelID().STORY,
 				id.ChannelID().CHARACTER,
-				id.ChannelID().TEAM_MEMBER,
 				id.ChannelID().SOZAI,
 				id.ChannelID().OFFICIAL_LINKS,
 			),
