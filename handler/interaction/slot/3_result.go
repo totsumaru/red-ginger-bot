@@ -205,23 +205,20 @@ func NoticeAtariToAdmin(
 - <@%s>
 `
 
-	count := 0
 	switch newAtariRoleID {
 	case id.RoleID().ATARI_3:
-		count = 3
-	}
+		embed := &discordgo.MessageEmbed{
+			Description: fmt.Sprintf(description, 3, i.Member.User.ID),
+			Color:       color.Yellow,
+			Author: &discordgo.MessageEmbedAuthor{
+				IconURL: i.Member.User.AvatarURL(""),
+				Name:    i.Member.User.Username,
+			},
+		}
 
-	embed := &discordgo.MessageEmbed{
-		Description: fmt.Sprintf(description, count, i.Member.User.ID),
-		Color:       color.Yellow,
-		Author: &discordgo.MessageEmbedAuthor{
-			IconURL: i.Member.User.AvatarURL(""),
-			Name:    i.Member.User.Username,
-		},
-	}
-
-	if _, err := s.ChannelMessageSendEmbed(id.ChannelID().MOD, embed); err != nil {
-		return errors.NewError("MODチャンネルにメッセージを送信できません", err)
+		if _, err := s.ChannelMessageSendEmbed(id.ChannelID().MOD, embed); err != nil {
+			return errors.NewError("MODチャンネルにメッセージを送信できません", err)
+		}
 	}
 
 	return nil
