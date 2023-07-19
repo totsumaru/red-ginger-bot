@@ -216,7 +216,12 @@ func NoticeAtariToAdmin(
 			},
 		}
 
-		if _, err := s.ChannelMessageSendEmbed(id.ChannelID().MOD, embed); err != nil {
+		messageSend := &discordgo.MessageSend{
+			Content: fmt.Sprintf("<@%s>", id.UserID().SOY),
+			Embed:   embed,
+		}
+
+		if _, err := s.ChannelMessageSendComplex(id.ChannelID().MOD, messageSend); err != nil {
 			return errors.NewError("MODチャンネルにメッセージを送信できません", err)
 		}
 	}
