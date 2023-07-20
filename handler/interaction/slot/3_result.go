@@ -217,7 +217,7 @@ func NoticeAtariToAdmin(
 		}
 
 		messageSend := &discordgo.MessageSend{
-			Content: fmt.Sprintf("<@%s>", id.UserID().SOY),
+			Content: fmt.Sprintf("<@%s>", id.UserID().GONZALE),
 			Embed:   embed,
 		}
 
