@@ -5,4 +5,5 @@ const (
 	CMD_Reset_Slot_Role = "!rg-slot-reset"
 	CMD_INFO            = "!rg-info"
 	CMD_Story           = "!rg-story"
+	CMD_QuizPanel       = "!rg-quiz-panel"
 )

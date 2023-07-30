@@ -2,6 +2,7 @@ package interaction
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/handler/interaction/quiz"
 	"github.com/techstart35/kifuneso-bot/handler/interaction/slot"
 	"github.com/techstart35/kifuneso-bot/internal/cmd"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
@@ -12,7 +13,8 @@ func InteractionCreateHandler(s *discordgo.Session, i *discordgo.InteractionCrea
 	switch i.Interaction.Type {
 	// メッセージコンポーネント（ボタン）イベント
 	case discordgo.InteractionMessageComponent:
-		switch i.MessageComponentData().CustomID {
+		interactionID := i.MessageComponentData().CustomID
+		switch interactionID {
 		case cmd.Interaction_CustomID_Slot_Start:
 			if err := slot.SendStartMessage(s, i, false); err != nil {
 				errors.SendErrMsg(s, err, i.Member.User)
@@ -40,6 +42,11 @@ func InteractionCreateHandler(s *discordgo.Session, i *discordgo.InteractionCrea
 			return
 		case cmd.Interaction_CustomID_Slot_PrizeInfo:
 			if err := slot.SendPrizeInfo(s, i); err != nil {
+				errors.SendErrMsg(s, err, i.Member.User)
+			}
+			return
+		default:
+			if err := quiz.HandleQuiz(s, i, interactionID); err != nil {
 				errors.SendErrMsg(s, err, i.Member.User)
 			}
 			return

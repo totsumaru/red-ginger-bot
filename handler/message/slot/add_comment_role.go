@@ -5,6 +5,7 @@ import (
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"github.com/techstart35/kifuneso-bot/internal/id"
 	"github.com/techstart35/kifuneso-bot/internal/slot"
+	"os"
 )
 
 // コメントをしたユーザーに5回分のロールを付与します
@@ -28,13 +29,15 @@ func AddFiveTicketRole(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	}
 
 	// チケットロールを更新します
-	if err := slot.UpdateRoleToPlus5(s, m.GuildID, m.Author.ID, m.Member.Roles); err != nil {
-		return errors.NewError("チケットロールを更新できません", err)
-	}
+	if os.Getenv("ENV") != "dev" {
+		if err := slot.UpdateRoleToPlus5(s, m.GuildID, m.Author.ID, m.Member.Roles); err != nil {
+			return errors.NewError("チケットロールを更新できません", err)
+		}
 
-	// ユーザーにAddedロールを付与します
-	if err := s.GuildMemberRoleAdd(m.GuildID, m.Author.ID, id.RoleID().SLOT_ADDED); err != nil {
-		return errors.NewError("ロールを付与できません", err)
+		// ユーザーにAddedロールを付与します
+		if err := s.GuildMemberRoleAdd(m.GuildID, m.Author.ID, id.RoleID().SLOT_ADDED); err != nil {
+			return errors.NewError("ロールを付与できません", err)
+		}
 	}
 
 	return nil
