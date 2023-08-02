@@ -30,6 +30,7 @@ type Role struct {
 	ATARI_8        string
 	ATARI_9        string
 	ATARI_10       string
+	QUIZ_PERFECT_2 string
 }
 
 func RoleID() Role {
@@ -62,6 +63,7 @@ func RoleID() Role {
 			ATARI_8:        "1122855880673726597",
 			ATARI_9:        "1122855899892043866",
 			ATARI_10:       "1122855940664856576",
+			QUIZ_PERFECT_2: "1136131225401180221",
 		}
 	} else {
 		return Role{
@@ -92,6 +94,7 @@ func RoleID() Role {
 			ATARI_8:        "1122855880673726597",
 			ATARI_9:        "1122855899892043866",
 			ATARI_10:       "1122855940664856576",
+			QUIZ_PERFECT_2: "1136128353724813363",
 		}
 	}
 }

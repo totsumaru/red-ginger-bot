@@ -11,7 +11,7 @@ func HandleQuiz(
 	i *discordgo.InteractionCreate,
 	interactionID string,
 ) error {
-	info, err := GetEmbedInfo(interactionID, i.Member.User.ID)
+	info, err := GetEmbedInfo(s, interactionID, i.Member.User.ID)
 	if err != nil {
 		return errors.NewError("送信する情報を取得できません", err)
 	}
@@ -53,7 +53,7 @@ func HandleQuiz(
 		resp.Data.Components = []discordgo.MessageComponent{actions}
 	}
 
-	if err := s.InteractionRespond(i.Interaction, resp); err != nil {
+	if err = s.InteractionRespond(i.Interaction, resp); err != nil {
 		return errors.NewError("レスポンスを送信できません", err)
 	}
 

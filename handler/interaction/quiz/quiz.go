@@ -1,9 +1,11 @@
 package quiz
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/internal/cmd"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
+	"github.com/techstart35/kifuneso-bot/internal/id"
 	"github.com/techstart35/kifuneso-bot/internal/supabase"
 )
 
@@ -14,12 +16,12 @@ type Action struct {
 	IsNewMessage bool
 }
 
-func GetEmbedInfo(interactionID, discordID string) (Action, error) {
+func GetEmbedInfo(s *discordgo.Session, interactionID, discordUserID string) (Action, error) {
 	switch interactionID {
 	// スタートが押された時
 	case cmd.QuizButton.Start.InteractionID:
 		// DBをリセットします
-		if err := supabase.InitPoint(discordID); err != nil {
+		if err := supabase.InitPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを初期化できません")
 		}
 
@@ -72,7 +74,7 @@ func GetEmbedInfo(interactionID, discordID string) (Action, error) {
 		}, nil
 	// 1-2が押された時
 	case cmd.QuizButton.Q1.Btn2.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -145,7 +147,7 @@ func GetEmbedInfo(interactionID, discordID string) (Action, error) {
 		}, nil
 	// 2-3が押された時
 	case cmd.QuizButton.Q2.Btn3.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -218,7 +220,7 @@ func GetEmbedInfo(interactionID, discordID string) (Action, error) {
 		}, nil
 	// 3-3が押された時
 	case cmd.QuizButton.Q3.Btn3.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -270,7 +272,7 @@ func GetEmbedInfo(interactionID, discordID string) (Action, error) {
 		}, nil
 	// 4-1が押された時
 	case cmd.QuizButton.Q4.Btn1.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -366,7 +368,7 @@ func GetEmbedInfo(interactionID, discordID string) (Action, error) {
 		}, nil
 	// 5-2が押された時
 	case cmd.QuizButton.Q5.Btn2.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -439,7 +441,7 @@ func GetEmbedInfo(interactionID, discordID string) (Action, error) {
 		}, nil
 	// 6-3が押された時
 	case cmd.QuizButton.Q6.Btn3.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -490,7 +492,7 @@ RED GINGERのファウンダーSoySauceMANが手掛けているNFTアートコ�
 		}, nil
 	// 7-1が押された時
 	case cmd.QuizButton.Q7.Btn1.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -563,7 +565,7 @@ RED GINGERプロジェクトの目標は
 		}, nil
 	// 8-1が押された時
 	case cmd.QuizButton.Q8.Btn1.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -658,7 +660,7 @@ RED GINGER世界に登場するAIメカをモチーフにしたNFTは？
 		}, nil
 	// 9-3が押された時
 	case cmd.QuizButton.Q9.Btn3.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -709,7 +711,7 @@ RED GINGERのテーマソング「WHO I AM」を歌っているのは？
 		}, nil
 	// 10-1が押された時
 	case cmd.QuizButton.Q10.Btn1.InteractionID:
-		if err := supabase.AddPoint(discordID); err != nil {
+		if err := supabase.AddPoint(discordUserID); err != nil {
 			return Action{}, errors.NewError("ポイントを更新できません", err)
 		}
 
@@ -755,12 +757,16 @@ RED GINGERのテーマソング「WHO I AM」を歌っているのは？
 		}, nil
 	// 10-次へが押された時
 	case cmd.QuizButton.Q10.Next.InteractionID:
-		point, err := supabase.FindPointByID(discordID)
+		point, err := supabase.FindPointByID(discordUserID)
 		if err != nil {
 			return Action{}, errors.NewError("IDでポイントを取得できません", err)
 		}
 
 		if point == 10 {
+			if err = s.GuildMemberRoleAdd(id.GuildID(), discordUserID, id.RoleID().QUIZ_PERFECT_2); err != nil {
+				return Action{}, errors.NewError("正解ロールを付与できません", err)
+			}
+
 			return Action{
 				Description: `
 全問正解！
@@ -771,14 +777,15 @@ RED GINGERのテーマソング「WHO I AM」を歌っているのは？
 				Button: []discordgo.Button{},
 			}, nil
 		} else {
-			return Action{
-				Description: `
-残念、全問正解ではありませんでした。
+			description := `
+残念、全問正解ではありませんでした。（%d/10）
 何度でも挑戦できるので、ぜひもう一度挑戦してみてください！
 
 - ホワイトペーパー
 https://www.canva.com/design/DAFTTcDtmiM/19dBrch5ixq-zscvp83e3A/view?utm_content=DAFTTcDtmiM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
-`,
+`
+			return Action{
+				Description: fmt.Sprintf(description, point),
 				Button: []discordgo.Button{{
 					Style:    discordgo.PrimaryButton,
 					Label:    "もう一度挑戦する",
