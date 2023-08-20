@@ -27,19 +27,21 @@ func ResetAndAddDailyRole(s *discordgo.Session, m *discordgo.MessageCreate) erro
 		return errors.NewError("特定のロールを持つユーザーを取得できません", err)
 	}
 
+	// この中でエラーが発生すると、その後のユーザー全てに影響が出るため、
+	// エラーは通知のみでreturnはしません。
 	for i, user := range users {
 		// ユーザーからSlotの回数券ロールとAddedロールを削除します
 		for _, role := range user.Roles {
 			if slot.IsSlotTicketRoleContainsAddedRole(role) {
 				if err = s.GuildMemberRoleRemove(m.GuildID, user.User.ID, role); err != nil {
-					return errors.NewError("ロールを付与できません", err)
+					errors.SendErrMsg(s, errors.NewError("ロールを削除できません。通知のみ行います"), user.User)
 				}
 			}
 		}
 
 		// ユーザーに5回券ロールを付与します
 		if err = s.GuildMemberRoleAdd(m.GuildID, user.User.ID, id.RoleID().SLOT_5_TICKET); err != nil {
-			return errors.NewError("ロールを付与できません", err)
+			errors.SendErrMsg(s, errors.NewError("5回券ロールを付与できません。通知のみ行います"), user.User)
 		}
 
 		if i%50 == 0 {
