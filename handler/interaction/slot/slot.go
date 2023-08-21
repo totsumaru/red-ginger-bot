@@ -43,8 +43,8 @@ const (
 
 // スロットの各回の値を1つ取得します
 //
-// 大当たり	：1/64（実際は1/63）
-// 小当たり	：1/32（実際は1/33）
+// 大当たり	：1/33（2回目1/3, 3回目1/11）
+// 小当たり	：1/32（2回目1/3, 3回目1/11）
 // ？？？	：1/256
 //
 // 1回目
@@ -158,7 +158,7 @@ func getThirdValue(firstValue, secondValue string) string {
 
 	switch value {
 	case Value_Beni + Value_Shou: // 紅_生
-		if oneRequestValueChance(21) {
+		if oneRequestValueChance(11) {
 			return Value_Ga
 		} else {
 			return getRandomValue([]string{
@@ -171,7 +171,7 @@ func getThirdValue(firstValue, secondValue string) string {
 			})
 		}
 	case Value_RED + Value_GIN: // RED_GIN
-		if oneRequestValueChance(21) {
+		if oneRequestValueChance(11) {
 			return Value_GER
 		} else {
 			return getRandomValue([]string{
