@@ -4,6 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/handler/message/info"
 	"github.com/techstart35/kifuneso-bot/handler/message/quiz"
+	"github.com/techstart35/kifuneso-bot/handler/message/race"
 	"github.com/techstart35/kifuneso-bot/handler/message/slot"
 	"github.com/techstart35/kifuneso-bot/internal/cmd"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
@@ -34,6 +35,11 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	case cmd.CMD_QuizPanel:
 		if err := quiz.SendPanel(s, m); err != nil {
+			errors.SendErrMsg(s, err, m.Author)
+			return
+		}
+	case cmd.CMD_Race:
+		if err := race.SendRace(s, m); err != nil {
 			errors.SendErrMsg(s, err, m.Author)
 			return
 		}

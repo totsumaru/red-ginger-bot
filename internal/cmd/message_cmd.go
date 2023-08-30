@@ -6,4 +6,5 @@ const (
 	CMD_INFO            = "!rg-info"
 	CMD_Story           = "!rg-story"
 	CMD_QuizPanel       = "!rg-quiz-panel"
+	CMD_Race            = "!rg-race"
 )
