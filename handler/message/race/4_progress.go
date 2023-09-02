@@ -121,7 +121,7 @@ func getRandResult(ranking int) (int, string) {
 	pointM2 := []Res{
 		{point: -2, text: "転んでしまった"},
 		{point: -2, text: "つまずいてしまった！"},
-		{point: -2, text: "コースアウトしてしまった"},
+		{point: -2, text: "コースを大きく外れている"},
 		{point: -2, text: "バランスを崩して転倒！"},
 		{point: -2, text: "急に足を引っ張られたようだ"},
 		{point: -2, text: "スタミナ切れでペースダウン"},
@@ -173,7 +173,8 @@ func getRandResult(ranking int) (int, string) {
 		{point: 2, text: "驚異的なスピードだ"},
 		{point: 2, text: "直線で猛然と加速"},
 		{point: 2, text: "まるで飛んでいるようだ"},
-		{point: 2, text: "完全にリードしている"},
+		{point: 2, text: "疲れを感じさせない走りをしている"},
+		{point: 2, text: "最後まで諦めずに走っている"},
 	}
 
 	// 3pt
@@ -182,7 +183,7 @@ func getRandResult(ranking int) (int, string) {
 		{point: 3, text: "まるでエンジンをつけたような走りをしている"},
 		{point: 3, text: "信じられないスピードで突き進む"},
 		{point: 3, text: "観客も驚くほどのスピードで走っている"},
-		{point: 3, text: "直線でさらに加速！"},
+		{point: 3, text: "直線で加速！"},
 		{point: 3, text: "完璧な走りを見せている"},
 		{point: 3, text: "歴史に名を刻む走りをしている"},
 	}
