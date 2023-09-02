@@ -9,7 +9,7 @@ import (
 
 // 開始メッセージを送信します
 //
-// Emoji: []UserID を返します。
+// Emoji: []User を返します。
 func sendStart(
 	s *discordgo.Session,
 	channelID, entryMsgID string,
@@ -29,13 +29,14 @@ func sendStart(
 	}
 	res = users
 
-	userCount := 0
+	// エントリーした人の総数を取得します
+	allEntryUserCount := 0
 	for _, user := range res {
-		userCount += len(user)
+		allEntryUserCount += len(user)
 	}
 
 	embed := &discordgo.MessageEmbed{
-		Description: fmt.Sprintf(description, userCount),
+		Description: fmt.Sprintf(description, allEntryUserCount),
 		Color:       color.Green,
 	}
 
@@ -48,6 +49,8 @@ func sendStart(
 }
 
 // リアクションした人を取得します
+//
+// Emoji: []Userを返します。
 func getReactedUsers(
 	s *discordgo.Session,
 	channelID, msgID string,
