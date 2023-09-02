@@ -46,17 +46,14 @@ func sendProgress(s *discordgo.Session, channelID string) (EntryUser, error) {
 
 // 実況を送信します
 func sendCommentary(
-	s *discordgo.Session,
-	currentRank []EntryUser,
-	channelID string,
-	index int,
+	s *discordgo.Session, currentRank []EntryUser, channelID string, index int,
 ) ([]EntryUser, error) {
 	res := make([]EntryUser, 0)
 	lines := make([]string, 0)
 
-	for _, entryUser := range currentRank {
+	for ranking, entryUser := range currentRank {
 		// pointとその文言を決定する
-		point, text := getRandResult()
+		point, text := getRandResult(ranking + 1)
 		// point
 		entryUser.AddPoint(point)
 		res = append(res, entryUser)
@@ -112,7 +109,7 @@ func sendResult(s *discordgo.Session, channelID string, entryUsers []EntryUser) 
 
 // ランダムな実況を取得します
 // point: textを返します
-func getRandResult() (int, string) {
+func getRandResult(ranking int) (int, string) {
 	rand.Seed(time.Now().UnixNano())
 
 	type Res struct {
@@ -120,8 +117,8 @@ func getRandResult() (int, string) {
 		text  string
 	}
 
-	res := []Res{
-		// -2pt
+	// -2pt
+	pointM2 := []Res{
 		{point: -2, text: "転んでしまった"},
 		{point: -2, text: "つまずいてしまった！"},
 		{point: -2, text: "コースアウトしてしまった"},
@@ -132,7 +129,10 @@ func getRandResult() (int, string) {
 		{point: -2, text: "障害物に接触、大きく遅れた"},
 		{point: -2, text: "足元が狂い、スピードが落ちた"},
 		{point: -2, text: "急な坂でスピードが落ちてしまった"},
-		// -1pt
+	}
+
+	// -1pt
+	pointM1 := []Res{
 		{point: -1, text: "少し減速している"},
 		{point: -1, text: "疲れているようだ"},
 		{point: -1, text: "ペースが乱れている"},
@@ -142,48 +142,81 @@ func getRandResult() (int, string) {
 		{point: -1, text: "足取りが重い"},
 		{point: -1, text: "コースを外れそうだ"},
 		{point: -1, text: "バランスを取り戻している"},
-		{point: -1, text: "後ろに下がっている"},
-		// 0pt
+	}
+
+	// 0pt
+	point0 := []Res{
 		{point: 0, text: "そのまま走っている"},
 		{point: 0, text: "安定した走りを見せている"},
-		{point: 0, text: "中盤戦で力を温存している"},
-		{point: 0, text: "特に変化はない"},
-		{point: 0, text: "平均的なスピードで走っている"},
+		{point: 0, text: "まだ力を温存している"},
 		{point: 0, text: "他のロボと並んでいる"},
 		{point: 0, text: "リズムを保っている"},
 		{point: 0, text: "一定のペースで進んでいる"},
 		{point: 0, text: "落ち着いた走りをしている"},
-		// 1pt
+	}
+
+	// 1pt
+	point1 := []Res{
 		{point: 1, text: "順調に走っている"},
 		{point: 1, text: "少しずつ加速している"},
-		{point: 1, text: "前のロボを追い越そうとしている"},
 		{point: 1, text: "力強い走りを見せている"},
-		{point: 1, text: "スムーズにカーブを曲がった"},
+		{point: 1, text: "スムーズにカーブを曲がっている"},
 		{point: 1, text: "状態が良さそうだ"},
 		{point: 1, text: "余裕の表情を見せている"},
 		{point: 1, text: "勢いがついてきた"},
-		// 2pt
+	}
+
+	// 2pt
+	point2 := []Res{
 		{point: 2, text: "スピードをあげてきた"},
 		{point: 2, text: "一気に加速！"},
-		{point: 2, text: "トップを狙っている"},
 		{point: 2, text: "驚異的なスピードだ"},
-		{point: 2, text: "他のロボを引き離そうとしている"},
 		{point: 2, text: "直線で猛然と加速"},
 		{point: 2, text: "まるで飛んでいるようだ"},
 		{point: 2, text: "完全にリードしている"},
-		// 3pt
-		{point: 3, text: "力を解放し、猛スピードで走っている"},
-		{point: 3, text: "まるでジェットエンジンをつけたようだ"},
-		{point: 3, text: "信じられないスピードで突き進む"},
-		{point: 3, text: "観客も驚くほどのスピードだ"},
-		{point: 3, text: "直線でさらに加速"},
-		{point: 3, text: "完璧な走りを見せている"},
-		{point: 3, text: "歴史に名を刻む走りだ"},
 	}
 
+	// 3pt
+	point3 := []Res{
+		{point: 3, text: "力を解放し、猛スピードで走っている"},
+		{point: 3, text: "まるでエンジンをつけたような走りをしている"},
+		{point: 3, text: "信じられないスピードで突き進む"},
+		{point: 3, text: "観客も驚くほどのスピードで走っている"},
+		{point: 3, text: "直線でさらに加速！"},
+		{point: 3, text: "完璧な走りを見せている"},
+		{point: 3, text: "歴史に名を刻む走りをしている"},
+	}
+
+	// 1位は1/3の確率で-2となる
+	// 最下位は1/3の確率で+3または+2となる
+	switch ranking {
+	case 1:
+		if rand.Intn(3) == 0 {
+			result := pointM2[rand.Intn(len(pointM2))]
+			return result.point, result.text
+		}
+	case len(EntryUsers):
+		if rand.Intn(3) == 0 {
+			// 結果の候補です
+			list := point3
+			list = append(list, point2...)
+
+			result := list[rand.Intn(len(point3)+len(point2))]
+			return result.point, result.text
+		}
+	}
+
+	all := make([]Res, 0)
+	all = append(all, pointM2...)
+	all = append(all, pointM1...)
+	all = append(all, point0...)
+	all = append(all, point1...)
+	all = append(all, point2...)
+	all = append(all, point3...)
+
 	// ランダムなインデックスを生成
-	randomIndex := rand.Intn(len(res))
+	randomIndex := rand.Intn(len(all))
 
 	// ランダムな要素を取得
-	return res[randomIndex].point, res[randomIndex].text
+	return all[randomIndex].point, all[randomIndex].text
 }
