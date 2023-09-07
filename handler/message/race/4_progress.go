@@ -53,7 +53,7 @@ func sendCommentary(
 
 	for ranking, entryUser := range currentRank {
 		// pointとその文言を決定する
-		point, text := getRandResult(ranking + 1)
+		point, text := getRandResult(ranking+1, index)
 		// point
 		entryUser.AddPoint(point)
 		res = append(res, entryUser)
@@ -109,7 +109,7 @@ func sendResult(s *discordgo.Session, channelID string, entryUsers []EntryUser) 
 
 // ランダムな実況を取得します
 // point: textを返します
-func getRandResult(ranking int) (int, string) {
+func getRandResult(ranking, index int) (int, string) {
 	rand.Seed(time.Now().UnixNano())
 
 	type Res struct {
@@ -119,55 +119,65 @@ func getRandResult(ranking int) (int, string) {
 
 	// -2pt
 	pointM2 := []Res{
-		{point: -2, text: "転んでしまった🅿"},
-		{point: -2, text: "つまずいてしまった！🅿"},
-		{point: -2, text: "コースを大きく外れている🅿"},
-		{point: -2, text: "バランスを崩して転倒！🅿"},
-		{point: -2, text: "急に足を引っ張られたようだ🅿"},
-		{point: -2, text: "スタミナ切れでペースダウン🅿"},
-		{point: -2, text: "突然立ち止まってしまった🅿"},
-		{point: -2, text: "障害物に接触、大きく遅れた🅿"},
-		{point: -2, text: "足元が狂い、スピードが落ちた🅿"},
-		{point: -2, text: "反応が遅れた🅿"},
-		{point: -2, text: "今のポジションに甘んじている🅿"},
-		{point: -2, text: "かけひきに失敗🅿"},
-		{point: -2, text: "ライバルと接触し復帰に手間取っている🅿"},
-		{point: -2, text: "戦略的な超スローペースか？遅れている！🅿"},
-		{point: -2, text: "トラブルか？…様子がおかしい🅿"},
-		{point: -2, text: "トラブルか？煙が出ている！🅿"},
-		{point: -2, text: "トラブルか？オイルが漏れている！🅿"},
-		{point: -2, text: "トラブルか？火花が出ている！🅿"},
-		{point: -2, text: "トラブルか？何かパーツが落ちた！🅿"},
-		{point: -2, text: "デブリにヒットしてスピン！🅿"},
-		{point: -2, text: "カグヤ電池の故障でペースダウン！🅿"},
-		{point: -2, text: "カグヤ電池を使い切ったのか？スピードが出ない！🅿"},
-		{point: -2, text: "ＨＬＧトラブル！発動しません！🅿"},
-		{point: -2, text: "ＨＬＧ逆噴射！何やってるの？！🅿"},
-		{point: -2, text: "ＨＬＧ噴射ミス！🅿"},
-		{point: -2, text: "ヘッドパーツのバランスが悪いようだ🅿"},
-		{point: -2, text: "ボディーパーツのバランスが悪いようだ🅿"},
-		{point: -2, text: "アームパーツのバランスが悪いようだ🅿"},
-		{point: -2, text: "コーナリングミス！壁に激突！🅿"},
-		{point: -2, text: "コーナリングミス！転倒！🅿"},
-		{point: -2, text: "強力な体当たりをされてスピン！🅿"},
-		{point: -2, text: "路面のオイルでスピン！コースアウト！🅿"},
-		{point: -2, text: "ヘアピンカーブでブレーキミス！スポンジバリアに激突！🅿"},
-		{point: -2, text: "シケインでブレーキミス！スポンジバリアに激突！🅿"},
-		{point: -2, text: "スロットルが故障！🅿"},
-		{point: -2, text: "時空構造体システム、アラート・レベル６！🅿"},
-		{point: -2, text: "エアロダイナミクス効果がなくスピードが上がらない！🅿"},
-		{point: -2, text: "オーバーヒートでブロー！炎と黒煙が出ている！🅿"},
-		{point: -2, text: "超スロースピード？一体何を企んでいるのか？🅿"},
-		{point: -2, text: "ファンサービスのためにスローダウン？あり得ないです！🅿"},
-		{point: -2, text: "ボディーパーツから異音がしていますね…🅿"},
-		{point: -2, text: "四面楚歌状態！打開のきっかけがつかめるか？🅿"},
-		{point: -2, text: "ボディーの振動が激しい…スピードが上がらない🅿"},
-		{point: -2, text: "ヘッドパーツにダメージ！何かがぶつかったようだ…🅿"},
-		{point: -2, text: "アームパーツが故障しているのか？大きく旋回🅿"},
-		{point: -2, text: "ストレートでふらつきがある…🅿"},
-		{point: -2, text: "動力系のトラブルか？…速度が落ちている🅿"},
-		{point: -2, text: "インからアウトへ…🅿"},
-		{point: -2, text: "混戦から脱落！後方に下がる！🅿"},
+		{point: -2, text: "転んでしまった"},
+		{point: -2, text: "つまずいてしまった！"},
+		{point: -2, text: "コースを大きく外れている"},
+		{point: -2, text: "バランスを崩して転倒！"},
+		{point: -2, text: "急に足を引っ張られたようだ"},
+		{point: -2, text: "スタミナ切れでペースダウン"},
+		{point: -2, text: "突然立ち止まってしまった"},
+		{point: -2, text: "障害物に接触、大きく遅れた"},
+		{point: -2, text: "足元が狂い、スピードが落ちた"},
+		{point: -2, text: "反応が遅れた"},
+		{point: -2, text: "今のポジションに甘んじている"},
+		{point: -2, text: "かけひきに失敗"},
+		{point: -2, text: "ライバルと接触し復帰に手間取っている"},
+		{point: -2, text: "戦略的な超スローペースか？遅れている！"},
+		{point: -2, text: "トラブルか？…様子がおかしい"},
+		{point: -2, text: "トラブルか？煙が出ている！"},
+		{point: -2, text: "トラブルか？オイルが漏れている！"},
+		{point: -2, text: "トラブルか？火花が出ている！"},
+		{point: -2, text: "トラブルか？何かパーツが落ちた！"},
+		{point: -2, text: "デブリにヒットしてスピン！"},
+		{point: -2, text: "カグヤ電池の故障でペースダウン！"},
+		{point: -2, text: "カグヤ電池を使い切ったのか？スピードが出ない！"},
+		{point: -2, text: "ＨＬＧトラブル！発動しません！"},
+		{point: -2, text: "ＨＬＧ逆噴射！何やってるの？！"},
+		{point: -2, text: "ＨＬＧ噴射ミス！"},
+		{point: -2, text: "ヘッドパーツのバランスが悪いようだ"},
+		{point: -2, text: "ボディーパーツのバランスが悪いようだ"},
+		{point: -2, text: "アームパーツのバランスが悪いようだ"},
+		{point: -2, text: "コーナリングミス！壁に激突！"},
+		{point: -2, text: "コーナリングミス！転倒！"},
+		{point: -2, text: "強力な体当たりをされてスピン！"},
+		{point: -2, text: "路面のオイルでスピン！コースアウト！"},
+		{point: -2, text: "ヘアピンカーブでブレーキミス！スポンジバリアに激突！"},
+		{point: -2, text: "シケインでブレーキミス！スポンジバリアに激突！"},
+		{point: -2, text: "スロットルが故障！"},
+		{point: -2, text: "時空構造体システム、アラート・レベル６！"},
+		{point: -2, text: "エアロダイナミクス効果がなくスピードが上がらない！"},
+		{point: -2, text: "オーバーヒートでブロー！炎と黒煙が出ている！"},
+		{point: -2, text: "超スロースピード？一体何を企んでいるのか？"},
+		{point: -2, text: "ファンサービスのためにスローダウン？あり得ないです！"},
+		{point: -2, text: "ボディーパーツから異音がしていますね…"},
+		{point: -2, text: "四面楚歌状態！打開のきっかけがつかめるか？"},
+		{point: -2, text: "ボディーの振動が激しい…スピードが上がらない"},
+		{point: -2, text: "ヘッドパーツにダメージ！何かがぶつかったようだ…"},
+		{point: -2, text: "アームパーツが故障しているのか？大きく旋回"},
+		{point: -2, text: "ストレートでふらつきがある…"},
+		{point: -2, text: "動力系のトラブルか？…速度が落ちている"},
+		{point: -2, text: "インからアウトへ…"},
+		{point: -2, text: "混戦から脱落！後方に下がる！"},
+		{point: -2, text: "は、灰皿の掃除をし始めた"},
+		{point: -2, text: "はアラート音が響き、スローダウン…"},
+		{point: -2, text: "はＨＬＧをまき散らす！危険な状態！"},
+		{point: -2, text: "はブレーキングでボロが出た！"},
+		{point: -2, text: "大きく膨らんで旋回…"},
+		{point: -2, text: "は靴下を踏んで転倒虫！"},
+		{point: -2, text: "はスピード違反で捕まり、罰金２０万！"},
+		{point: -2, text: "はシャンパンを買いに酒屋へ走った"},
+		{point: -2, text: "…………めっちゃ遅っ！！！！！！"},
+		{point: -2, text: "、天下太平……"},
 	}
 	// -1pt
 	pointM1 := []Res{
@@ -220,6 +230,16 @@ func getRandResult(ranking int) (int, string) {
 		{point: -1, text: "動力系に改善が必要か？…加速が悪い"},
 		{point: -1, text: "アウトからインへ…"},
 		{point: -1, text: "混戦から脱落か？…遅れが出ている"},
+		{point: -1, text: "は缶コーヒーを一口飲んだ"},
+		{point: -1, text: "はアラートランプ点灯、スローダウン…"},
+		{point: -1, text: "はＨＬＧ残量が重そうだ。スピードが乗らない"},
+		{point: -1, text: "！まさかのブレーキング・ミス！"},
+		{point: -1, text: "やや膨らんで旋回…"},
+		{point: -1, text: "は靴下をよけてスリップ！"},
+		{point: -1, text: "は飲酒検問で止められた！"},
+		{point: -1, text: "はシャンパンのキャンセル電話をしている…"},
+		{point: -1, text: "…………遅っ！！！！"},
+		{point: -1, text: "、平穏無事…"},
 	}
 	// 0pt
 	point0 := []Res{
@@ -270,6 +290,16 @@ func getRandResult(ranking int) (int, string) {
 		{point: 0, text: "動力系を改善して効果が出ているか？"},
 		{point: 0, text: "センターをキープ…"},
 		{point: 0, text: "混戦に喰らいついている！"},
+		{point: 0, text: "がファイティング・ポーズ！"},
+		{point: 0, text: "は警告灯が点滅している…"},
+		{point: 0, text: "はＨＬＧ残量が減って、スピードに乗り始めた"},
+		{point: 0, text: "はクレバーな走り…"},
+		{point: 0, text: "ベストラインで旋回…"},
+		{point: 0, text: "は靴下を洗濯かごへ入れに行った…"},
+		{point: 0, text: "は歩行者を優先し、横断歩道前で停止！"},
+		{point: 0, text: "は、お肉が食べたい…と思っている"},
+		{point: 0, text: "……遅くもなく速くもない、中途半端！"},
+		{point: 0, text: "、縦横無尽！！"},
 	}
 	// 1pt
 	point1 := []Res{
@@ -320,6 +350,16 @@ func getRandResult(ranking int) (int, string) {
 		{point: 1, text: "動力系を改善して、ボディーの負担を軽減しています"},
 		{point: 1, text: "インをキープ…"},
 		{point: 1, text: "混戦から脱出か！一歩リード！"},
+		{point: 1, text: "はターボ・システムＯＮ！"},
+		{point: 1, text: "、センサーがイエローからグリーンへ…加速を始めた！"},
+		{point: 1, text: "ってこんなに速かったのか！？まだまだ加速する！"},
+		{point: 1, text: "！コーナーでの旋回が素早い！"},
+		{point: 1, text: "イン側にボディーを倒して旋回…"},
+		{point: 1, text: "は靴下を投げた…"},
+		{point: 1, text: "はお婆さんの手を引いて横断歩道を一緒に渡った！"},
+		{point: 1, text: "はシャンパンを持って走っている"},
+		{point: 1, text: "……まーまー速いんちゃーう？"},
+		{point: 1, text: "、獅子奮迅！！！"},
 	}
 	// 2pt
 	point2 := []Res{
@@ -370,6 +410,16 @@ func getRandResult(ranking int) (int, string) {
 		{point: 2, text: "動力系を改善して、加速性能アップしています！"},
 		{point: 2, text: "アウトをキープ…"},
 		{point: 2, text: "混戦から脱出成功！…逃げ切り体制！"},
+		{point: 2, text: "はスーパーチャージャーＯＮ！"},
+		{point: 2, text: "のエキゾーストマニホールドから快音が響く！"},
+		{point: 2, text: "はドリフト走行ですり抜けた"},
+		{point: 2, text: "は荷重移動が素晴らしい！最速コーナリング！"},
+		{point: 2, text: "イン側につけたまま徐々に加速…"},
+		{point: 2, text: "は靴下を懐に入れた？…"},
+		{point: 2, text: "は覆面パトカーに気づき、スピードを落とした！"},
+		{point: 2, text: "はシャンパンを振っている"},
+		{point: 2, text: "、速いねー！"},
+		{point: 2, text: "、疾風雷神！！！！"},
 	}
 	// 3pt
 	point3 := []Res{
@@ -420,6 +470,43 @@ func getRandResult(ranking int) (int, string) {
 		{point: 3, text: "動力系を改善して、ＭＡＸスピードを大幅アップ！"},
 		{point: 3, text: "アウトからインを突く…"},
 		{point: 3, text: "混戦から脱出し、独走態勢！"},
+		{point: 3, text: "はツイン・ターボのタービンが唸る！"},
+		{point: 3, text: "の心地よいメカニカル・ノイズ！まるで音楽だ！"},
+		{point: 3, text: "まるで命を削るように走る…勝利のために"},
+		{point: 3, text: "、最適な角度と速度！まるで魔法のようだ！"},
+		{point: 3, text: "壁スレスレの旋回！ギリギリを攻めています！"},
+		{point: 3, text: "は靴下を見て見ぬふりをした…"},
+		{point: 3, text: "は制限速度で、誇らしげに走っている…"},
+		{point: 3, text: "はシャンパンが頭をよぎるが、レースに集中する…"},
+		{point: 3, text: "、速い！！！"},
+		{point: 3, text: "、電光石火！！！！！"},
+	}
+	// 6pt
+	point6 := []Res{
+		{point: 6, text: "最後の直線を流星が走りました！"},
+		{point: 6, text: "が今、翼を広げた！"},
+		{point: 6, text: "空を飛ぶ鳥のように自由だ"},
+		{point: 6, text: "彗星のように輝いている"},
+		{point: 6, text: "今トップスピードに！まさに稲妻のごとし！"},
+		{point: 6, text: "！　ニトロ噴射ぁぁぁーーーーーー！！"},
+		{point: 6, text: "よ！勝利以外は許されない！許されないのだー！"},
+		{point: 6, text: "…ラインがクロス！サイド・バイ・サイド！！！"},
+		{point: 6, text: "、勝利を確信？！ガッツポーズ！！！"},
+		{point: 6, text: "、さぁ！来た！この瞬間！ラストスパート！"},
+		{point: 6, text: "、ホデテコーーーーー！！！！！"},
+		{point: 6, text: "ＮＯ　ＡＴＴＡＣＫ！　ＮＯ　ＣＨＡＮＣＥ！"},
+		{point: 6, text: "、並んだ！譲れない！気力の勝負だ！"},
+		{point: 6, text: "、パワーの温存、ここで爆発ー！！"},
+		{point: 6, text: "、心を燃やせ！ファイナルアタック！"},
+	}
+
+	// 9回目、10回目は1/5の確率で+6となる
+	switch index + 1 {
+	case 9, 10:
+		if rand.Intn(5) == 0 {
+			result := point6[rand.Intn(len(point6))]
+			return result.point, result.text
+		}
 	}
 
 	// 1位は1/3の確率で-2となる
