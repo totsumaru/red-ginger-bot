@@ -58,7 +58,7 @@ func sendCommentary(
 		entryUser.AddPoint(point)
 		res = append(res, entryUser)
 		// text
-		lines = append(lines, fmt.Sprintf("%s%sは%s", entryUser.Emoji, entryUser.Name, text))
+		lines = append(lines, fmt.Sprintf("%s%s%s", entryUser.Emoji, entryUser.Name, text))
 	}
 
 	description := `
