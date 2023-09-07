@@ -3,8 +3,8 @@ package race
 const (
 	Emoji1 = "🔥"
 	Emoji2 = "🐢"
-	Emoji3 = "⚡"
-	Emoji4 = "🐠"
+	Emoji3 = "❄️"
+	Emoji4 = "🐟"
 	Emoji5 = "⭐"
 )
 
