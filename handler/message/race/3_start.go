@@ -18,7 +18,7 @@ func sendStart(
 
 	var description = `
 -- 受付終了 --
-レースを開始します！
+RGグランプリを開始します！
 
 エントリー: %d人
 `

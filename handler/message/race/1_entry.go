@@ -18,7 +18,7 @@ func sendEntryMessage(s *discordgo.Session, channelID string) (string, error) {
 	}
 
 	var description = `
-# AIレース受付
+# RGグランプリ受付
 次のAIロボ中から、1位を予想してください。
 
 %s
