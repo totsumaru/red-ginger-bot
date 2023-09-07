@@ -37,9 +37,8 @@ func sendEntryMessage(s *discordgo.Session, channelID string) (string, error) {
 	}
 
 	// リアクションを付与します
-	emojis := []string{Emoji1, Emoji2, Emoji3}
-	for _, emoji := range emojis {
-		if err = s.MessageReactionAdd(channelID, msg.ID, emoji); err != nil {
+	for _, entry := range EntryUsers {
+		if err = s.MessageReactionAdd(channelID, msg.ID, entry.Emoji); err != nil {
 			return "", errors.NewError("絵文字を付与できません", err)
 		}
 	}
