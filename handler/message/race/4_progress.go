@@ -102,6 +102,9 @@ func sendResult(s *discordgo.Session, channelID string, entryUsers []EntryUser) 
 	embed := &discordgo.MessageEmbed{
 		Description: fmt.Sprintf(description, strings.Join(lines, "\n")),
 		Color:       color.Yellow,
+		Image: &discordgo.MessageEmbedImage{
+			URL: entryUsers[0].ImageURL,
+		},
 	}
 
 	_, err := s.ChannelMessageSendEmbed(channelID, embed)
