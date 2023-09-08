@@ -11,16 +11,25 @@ import (
 func sendWinnerUsers(
 	s *discordgo.Session,
 	channelID string,
-	selectedUsers []*discordgo.User,
+	first []*discordgo.User,
+	second []*discordgo.User,
 ) error {
 	lines := make([]string, 0)
 
 	lines = append(lines, "---当選者---\n")
 
-	if len(selectedUsers) == 0 {
+	if len(first) == 0 {
 		lines = append(lines, "当選者なし")
 	} else {
-		for _, user := range selectedUsers {
+		// 1位を追加
+		lines = append(lines, "🥇｜1位---")
+		for _, user := range first {
+			lines = append(lines, fmt.Sprintf("<@%s>", user.ID))
+		}
+
+		// 2位を追加
+		lines = append(lines, "\n🥈｜2位---")
+		for _, user := range second {
 			lines = append(lines, fmt.Sprintf("<@%s>", user.ID))
 		}
 	}

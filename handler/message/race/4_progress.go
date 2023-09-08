@@ -14,8 +14,8 @@ import (
 
 // 途中経過のメッセージを送信します
 //
-// 1番のUser(ロボ)を返します。
-func sendProgress(s *discordgo.Session, channelID string) (EntryUser, error) {
+// User(ロボ)を順番通り返します。
+func sendProgress(s *discordgo.Session, channelID string) ([]EntryUser, error) {
 	currentRank := EntryUsers
 
 	for i := 0; i < 10; i++ {
@@ -25,7 +25,7 @@ func sendProgress(s *discordgo.Session, channelID string) (EntryUser, error) {
 
 		entryUsers, err := sendCommentary(s, currentRank, channelID, i)
 		if err != nil {
-			return currentRank[0], errors.NewError("実況を送信できません", err)
+			return currentRank, errors.NewError("実況を送信できません", err)
 		}
 		currentRank = entryUsers
 
@@ -39,10 +39,10 @@ func sendProgress(s *discordgo.Session, channelID string) (EntryUser, error) {
 
 	// 最後に結果を送信します
 	if err := sendResult(s, channelID, currentRank); err != nil {
-		return currentRank[0], errors.NewError("結果を送信できません", err)
+		return currentRank, errors.NewError("結果を送信できません", err)
 	}
 
-	return currentRank[0], nil
+	return currentRank, nil
 }
 
 // 実況を送信します

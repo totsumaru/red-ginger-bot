@@ -28,13 +28,15 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	}
 
 	// 実況メッセージを送信
-	winner, err := sendProgress(s, m.ChannelID)
+	entryUsers, err := sendProgress(s, m.ChannelID)
 	if err != nil {
 		return errors.NewError("実況メッセージを送信できません", err)
 	}
 
-	if err = sendWinnerUsers(s, m.ChannelID, allUsers[winner.Emoji]); err != nil {
-
+	if err = sendWinnerUsers(
+		s, m.ChannelID, allUsers[entryUsers[0].Emoji], allUsers[entryUsers[1].Emoji],
+	); err != nil {
+		return errors.NewError("結果メッセージを送信できません", err)
 	}
 
 	return nil
