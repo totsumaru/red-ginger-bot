@@ -58,7 +58,7 @@ func sendCommentary(
 		entryUser.AddPoint(point)
 		res = append(res, entryUser)
 		// text
-		lines = append(lines, fmt.Sprintf("%d. %s%s %s",
+		lines = append(lines, fmt.Sprintf("%d. %s__%s__ %s",
 			ranking+1,
 			entryUser.Emoji,
 			entryUser.Name,
