@@ -31,6 +31,13 @@ func sendEntryMessage(s *discordgo.Session, channelID string) (string, error) {
 		Description: fmt.Sprintf(description, strings.Join(lines, "\n")),
 	}
 
+	// エントリー画像を送信します
+	_, err := s.ChannelMessageSendEmbed(channelID, &discordgo.MessageEmbed{
+		Image: &discordgo.MessageEmbedImage{
+			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1149546792036339762/RGGandPrix.png",
+		},
+	})
+
 	msg, err := s.ChannelMessageSendEmbed(channelID, embed)
 	if err != nil {
 		return "", errors.NewError("メッセージを送信できません", err)
