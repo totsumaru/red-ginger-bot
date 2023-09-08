@@ -7,7 +7,6 @@ import (
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"math/rand"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -96,17 +95,7 @@ func sendResult(s *discordgo.Session, channelID string, entryUsers []EntryUser) 
 	lines := make([]string, 0)
 
 	for index, entryUser := range entryUsers {
-		rank := strconv.Itoa(index + 1)
-		switch rank {
-		case "1":
-			rank = "🥇"
-		case "2":
-			rank = "🥈"
-		case "3":
-			rank = "🥉"
-		}
-
-		line := fmt.Sprintf("%s: %s%s", rank, entryUser.Emoji, entryUser.Name)
+		line := fmt.Sprintf("%d: %s%s", index+1, entryUser.Emoji, entryUser.Name)
 		lines = append(lines, line)
 	}
 
