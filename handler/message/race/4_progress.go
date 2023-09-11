@@ -2,13 +2,14 @@ package race
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
-	"github.com/techstart35/kifuneso-bot/internal/color"
-	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"math/rand"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/internal/color"
+	"github.com/techstart35/kifuneso-bot/internal/errors"
 )
 
 // 途中経過のメッセージを送信します

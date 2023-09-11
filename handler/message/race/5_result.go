@@ -2,9 +2,10 @@ package race
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
-	"strings"
 )
 
 // 当たったユーザーを送信します
