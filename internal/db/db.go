@@ -72,7 +72,7 @@ func (r Race) FindByID(id string) (Race, error) {
 // 全てのデータを取得します
 func (r Race) FindAll() ([]Race, error) {
 	var races []Race
-	if err := DB.Find(&races).Error; err != nil {
+	if err := DB.Order("point DESC").Find(&races).Error; err != nil {
 		return nil, errors.NewError("データを取得できません", err)
 	}
 

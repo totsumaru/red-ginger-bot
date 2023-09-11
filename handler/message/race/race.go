@@ -63,17 +63,20 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	{
 		description := `
 👑 ランキング 👑
-(%s更新)
+%s更新
+
+※ポイントが同じ場合は、先頭の数字に差があっても同じ順位とカウントします
 
 %s
 -------
 `
 
-		textLine := make([]string, 0)
 		races, err := db.Race{}.FindAll()
 		if err != nil {
 			return errors.NewError("全ての情報を取得できません", err)
 		}
+
+		textLine := make([]string, 0)
 
 		for _, race := range races {
 			u, err := s.User(race.ID)
