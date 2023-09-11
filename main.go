@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"os"
 	"os/signal"
@@ -9,7 +10,10 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/techstart35/kifuneso-bot/api"
 	"github.com/techstart35/kifuneso-bot/handler"
 )
 
@@ -52,6 +56,46 @@ func main() {
 		}
 		return
 	}()
+
+	// Gin
+	{
+		engine := gin.Default()
+
+		// CORSの設定
+		// ここからCorsの設定
+		engine.Use(cors.New(cors.Config{
+			// アクセスを許可したいアクセス元
+			AllowOrigins: []string{
+				"*",
+			},
+			// アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
+			AllowMethods: []string{
+				"POST",
+				"GET",
+			},
+			// 許可したいHTTPリクエストヘッダ
+			AllowHeaders: []string{
+				"Access-Control-Allow-Credentials",
+				"Access-Control-Allow-Headers",
+				"Content-Type",
+				"Content-Length",
+				"Accept-Encoding",
+				"Authorization",
+				"Token",
+			},
+			// cookieなどの情報を必要とするかどうか
+			//AllowCredentials: true,
+			// preflightリクエストの結果をキャッシュする時間
+			//MaxAge: 24 * time.Hour,
+		}))
+
+		// ルートを設定する
+		api.RegisterRouter(engine)
+
+		if err = engine.Run(":8080"); err != nil {
+			log.Fatal("起動に失敗しました")
+		}
+	}
 
 	stopBot := make(chan os.Signal, 1)
 	signal.Notify(stopBot, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
