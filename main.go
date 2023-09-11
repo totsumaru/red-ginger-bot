@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
-	"github.com/techstart35/kifuneso-bot/handler"
+
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
+	"github.com/techstart35/kifuneso-bot/handler"
 )
 
 const (

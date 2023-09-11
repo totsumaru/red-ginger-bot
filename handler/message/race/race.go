@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/internal/db"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 )
 
@@ -36,10 +37,23 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 		return errors.NewError("実況メッセージを送信できません", err)
 	}
 
-	if err = sendWinnerUsers(
-		s, m.ChannelID, allUsers[entryUsers[0].Emoji], allUsers[entryUsers[1].Emoji],
-	); err != nil {
+	firstWinners := allUsers[entryUsers[0].Emoji]
+	secondWinners := allUsers[entryUsers[1].Emoji]
+
+	if err = sendWinnerUsers(s, m.ChannelID, firstWinners, secondWinners); err != nil {
 		return errors.NewError("結果メッセージを送信できません", err)
+	}
+
+	// DBに格納します
+	for _, winner := range firstWinners {
+		r := db.Race{
+			ID:    winner.ID,
+			Point: 2, // 1位的中は2ポイント
+		}
+
+		if err = r.Upsert(); err != nil {
+			return errors.NewError("Upsertに失敗しました", err)
+		}
 	}
 
 	return nil
