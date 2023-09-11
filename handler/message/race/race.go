@@ -62,10 +62,11 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	// ランキングを更新します
 	{
 		description := `
-- ランキング -
+👑 ランキング 👑
 (%s更新)
 
 %s
+-------
 `
 
 		textLine := make([]string, 0)
