@@ -74,7 +74,7 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	{
 		description := `
 👑 ランキング 👑
-%s更新
+（%s更新）
 
 ※ポイントが同じ場合は、先頭の数字に差があっても同じ順位とカウントします
 
