@@ -59,6 +59,17 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 		}
 	}
 
+	for _, winner := range secondWinners {
+		r := db.Race{
+			ID:    winner.ID,
+			Point: 1, // 2位的中は1ポイント
+		}
+
+		if err = r.Upsert(); err != nil {
+			return errors.NewError("Upsertに失敗しました", err)
+		}
+	}
+
 	// ランキングを更新します
 	{
 		description := `
