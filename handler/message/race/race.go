@@ -28,6 +28,8 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 		return errors.NewError("開始メッセージを送信できません", err)
 	}
 
+	time.Sleep(5 * time.Second)
+
 	// 実況メッセージを送信
 	entryUsers, err := sendProgress(s, m.ChannelID)
 	if err != nil {
