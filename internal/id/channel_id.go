@@ -14,6 +14,7 @@ type Channel struct {
 	SOZAI          string
 	OFFICIAL_LINKS string
 	MOD            string
+	RANKING        string
 }
 
 func ChannelID() Channel {
@@ -28,6 +29,7 @@ func ChannelID() Channel {
 			SOZAI:          "1128178255929823264",
 			OFFICIAL_LINKS: "1128508486620282920",
 			MOD:            "1129618901261631648",
+			RANKING:        "",
 		}
 	} else {
 		return Channel{
@@ -42,6 +44,7 @@ func ChannelID() Channel {
 			SOZAI:          "1116640396651548773",
 			OFFICIAL_LINKS: "1070289892568997898",
 			MOD:            "1067226942446772335",
+			RANKING:        "1150697516162097182",
 		}
 	}
 }

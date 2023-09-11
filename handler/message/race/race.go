@@ -1,11 +1,14 @@
 package race
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/internal/db"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
+	"github.com/techstart35/kifuneso-bot/internal/id"
 )
 
 func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
@@ -53,6 +56,42 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 
 		if err = r.Upsert(); err != nil {
 			return errors.NewError("Upsertに失敗しました", err)
+		}
+	}
+
+	// ランキングを更新します
+	{
+		description := `
+- ランキング -
+(%s更新)
+
+%s
+`
+
+		textLine := make([]string, 0)
+		races, err := db.Race{}.FindAll()
+		if err != nil {
+			return errors.NewError("全ての情報を取得できません", err)
+		}
+
+		for _, race := range races {
+			u, err := s.User(race.ID)
+			if err != nil {
+				return errors.NewError("ユーザーを取得できません", err)
+			}
+
+			line := fmt.Sprintf("%s: %dpt", u.Username, race.Point)
+			textLine = append(textLine, line)
+		}
+
+		today := time.Now().Format("2006-01-02")
+
+		_, err = s.ChannelMessageSend(
+			id.ChannelID().RANKING,
+			fmt.Sprintf(description, today, strings.Join(textLine, "\n")),
+		)
+		if err != nil {
+			return errors.NewError("メッセージを送信できません", err)
 		}
 	}
 
