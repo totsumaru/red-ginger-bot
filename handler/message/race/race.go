@@ -99,7 +99,7 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 				return errors.NewError("ユーザーを取得できません", err)
 			}
 
-			line := fmt.Sprintf("%d｜%s: %dpt", index, u.Username, race.Point)
+			line := fmt.Sprintf("%d. %s: %dpt", index+1, u.Username, race.Point)
 			textLine = append(textLine, line)
 		}
 
