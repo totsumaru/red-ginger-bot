@@ -26,6 +26,10 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 		}
 	}
 
+	// 1分前-開始メッセージまでは本来1分ですが、
+	// リアクション集計に時間がかかるため、10秒短くしています
+	time.Sleep(50 * time.Second)
+
 	// 開始メッセージを送信
 	allUsers, err := sendStart(s, m.ChannelID, msgID)
 	if err != nil {
