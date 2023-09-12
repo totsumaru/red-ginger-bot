@@ -1,10 +1,13 @@
 package message
 
 import (
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/handler/message/info"
 	"github.com/techstart35/kifuneso-bot/handler/message/quiz"
 	"github.com/techstart35/kifuneso-bot/handler/message/race"
+	"github.com/techstart35/kifuneso-bot/handler/message/race/operate_database"
 	"github.com/techstart35/kifuneso-bot/handler/message/slot"
 	"github.com/techstart35/kifuneso-bot/internal/cmd"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
@@ -40,6 +43,13 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	case cmd.CMD_Race:
 		if err := race.SendRace(s, m); err != nil {
+			errors.SendErrMsg(s, err, m.Author)
+			return
+		}
+	}
+
+	if strings.Contains(m.Content, cmd.CMD_DeleteRecordByID) {
+		if err := operate_database.DeleteByID(s, m); err != nil {
 			errors.SendErrMsg(s, err, m.Author)
 			return
 		}

@@ -59,6 +59,20 @@ func (r *Race) Upsert() error {
 	return nil
 }
 
+// 指定のIDのレコードを削除します
+func (r Race) DeleteByID() error {
+	if r.ID == "" {
+		return errors.NewError("IDが空です")
+	}
+
+	// 削除操作
+	if err := DB.Delete(&Race{}, "id = ?", r.ID).Error; err != nil {
+		return errors.NewError("削除に失敗しました", err)
+	}
+
+	return nil
+}
+
 // 取得します
 func (r Race) FindByID(id string) (Race, error) {
 	var race Race
