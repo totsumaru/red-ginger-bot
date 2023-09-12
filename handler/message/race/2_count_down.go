@@ -8,13 +8,25 @@ import (
 )
 
 // カウントダウンメッセージを送信します
-func sendCountDown(s *discordgo.Session, channelID string, leftMin int) error {
+func sendCountDown(
+	s *discordgo.Session,
+	guildID, channelID, msgID string,
+	leftMin int,
+) error {
 	var description = `
 あと%d分で開始します
+
+↓エントリーはこちら
+%s
 `
 
+	link := fmt.Sprintf(
+		"https://discord.com/channels/%s/%s/%s",
+		guildID, channelID, msgID,
+	)
+
 	embed := &discordgo.MessageEmbed{
-		Description: fmt.Sprintf(description, leftMin),
+		Description: fmt.Sprintf(description, leftMin, link),
 	}
 
 	_, err := s.ChannelMessageSendEmbed(channelID, embed)
