@@ -94,12 +94,17 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 		textLine := make([]string, 0)
 
 		for index, race := range races {
-			u, err := s.User(race.ID)
+			member, err := s.GuildMember(m.GuildID, race.ID)
 			if err != nil {
 				return errors.NewError("ユーザーを取得できません", err)
 			}
 
-			line := fmt.Sprintf("%d. %s: %dpt", index+1, u.Username, race.Point)
+			name := member.Nick
+			if name == "" {
+				name = member.User.Username
+			}
+
+			line := fmt.Sprintf("%d. %s: %dpt", index+1, name, race.Point)
 			textLine = append(textLine, line)
 		}
 
