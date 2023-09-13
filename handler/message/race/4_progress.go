@@ -20,7 +20,7 @@ func sendProgress(s *discordgo.Session, channelID string) ([]EntryUser, error) {
 
 	for i := 0; i < 10; i++ {
 		if i != 0 {
-			time.Sleep(9 * time.Second)
+			time.Sleep(12 * time.Second)
 		}
 
 		entryUsers, err := sendCommentary(s, currentRank, channelID, i)
