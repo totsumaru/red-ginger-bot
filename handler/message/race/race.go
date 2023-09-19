@@ -47,6 +47,8 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	firstWinners := allUsers[entryUsers[0].Emoji]
 	secondWinners := allUsers[entryUsers[1].Emoji]
 
+	time.Sleep(5 * time.Second)
+
 	if err = sendWinnerUsers(s, m.ChannelID, firstWinners, secondWinners); err != nil {
 		return errors.NewError("結果メッセージを送信できません", err)
 	}
