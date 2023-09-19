@@ -6,7 +6,7 @@ import (
 )
 
 // レスポンスのEdit関数を返します
-type EditFunc func(interaction *discordgo.Interaction, newresp *discordgo.WebhookEdit) (*discordgo.Message, error)
+type EditFunc func(interaction *discordgo.Interaction, newresp *discordgo.WebhookEdit, options ...discordgo.RequestOption) (*discordgo.Message, error)
 
 // Interactionのdeferメッセージを送信します
 func SendInteractionWaitingMessage(
