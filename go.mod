@@ -3,7 +3,7 @@ module github.com/techstart35/kifuneso-bot
 go 1.18
 
 require (
-	github.com/bwmarrin/discordgo v0.26.1
+	github.com/bwmarrin/discordgo v0.27.1
 	github.com/joho/godotenv v1.4.0
 	gorm.io/driver/sqlite v1.5.3
 	gorm.io/gorm v1.25.4
