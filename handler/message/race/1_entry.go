@@ -20,6 +20,8 @@ func sendEntryMessage(s *discordgo.Session, channelID string) (string, error) {
 
 	var description = `
 # 🏁RGグランプリ受付
+(Season2)
+
 1. 次のAIロボ中から1位を予想
 2. その1つの絵文字をリアクション
 （5分後に開始）
