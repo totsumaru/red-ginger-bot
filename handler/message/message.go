@@ -46,6 +46,11 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			errors.SendErrMsg(s, err, m.Author)
 			return
 		}
+	case cmd.CMD_DeleteAll:
+		if err := operate_database.DeleteAll(s, m); err != nil {
+			errors.SendErrMsg(s, err, m.Author)
+			return
+		}
 	}
 
 	if strings.Contains(m.Content, cmd.CMD_DeleteRecordByID) {

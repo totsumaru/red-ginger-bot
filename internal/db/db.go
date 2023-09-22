@@ -73,6 +73,16 @@ func (r Race) DeleteByID() error {
 	return nil
 }
 
+// 全てのレコードを削除します
+func (r Race) DeleteAll() error {
+	// 削除操作
+	if err := DB.Delete(&Race{}).Error; err != nil {
+		return errors.NewError("全てのレコードの削除に失敗しました", err)
+	}
+
+	return nil
+}
+
 // 取得します
 func (r Race) FindByID(id string) (Race, error) {
 	var race Race

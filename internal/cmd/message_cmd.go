@@ -8,4 +8,5 @@ const (
 	CMD_QuizPanel        = "!rg-quiz-panel"
 	CMD_Race             = "!rg-race"
 	CMD_DeleteRecordByID = "!rg-delete-record"
+	CMD_DeleteAll        = "!rg-delete-all"
 )
