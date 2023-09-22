@@ -76,7 +76,7 @@ func (r Race) DeleteByID() error {
 // 全てのレコードを削除します
 func (r Race) DeleteAll() error {
 	// 削除操作
-	if err := DB.Delete(&Race{}).Error; err != nil {
+	if err := DB.Exec("DELETE FROM races").Error; err != nil {
 		return errors.NewError("全てのレコードの削除に失敗しました", err)
 	}
 
