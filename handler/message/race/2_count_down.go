@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 )
 
@@ -27,6 +28,7 @@ func sendCountDown(
 
 	embed := &discordgo.MessageEmbed{
 		Description: fmt.Sprintf(description, leftMin, link),
+		Color:       color.Yellow,
 	}
 
 	_, err := s.ChannelMessageSendEmbed(channelID, embed)
