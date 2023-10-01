@@ -39,7 +39,7 @@ func sendEntryMessage(s *discordgo.Session, channelID string) (string, error) {
 	// エントリー画像を送信します
 	_, err := s.ChannelMessageSendEmbed(channelID, &discordgo.MessageEmbed{
 		Image: &discordgo.MessageEmbedImage{
-			URL: "https://cdn.discordapp.com/attachments/1103240223376293938/1154792325273358416/RGGandPrix2.png",
+			URL: EntryImageURL,
 		},
 	})
 
