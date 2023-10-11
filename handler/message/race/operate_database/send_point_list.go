@@ -36,7 +36,7 @@ func SendPointList(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	}
 
 	_, err = s.ChannelMessageSend(
-		id.ChannelID().RANKING,
+		m.ChannelID,
 		strings.Join(list, "\n"),
 	)
 	if err != nil {
