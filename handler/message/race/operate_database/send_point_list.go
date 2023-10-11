@@ -32,7 +32,7 @@ func SendPointList(s *discordgo.Session, m *discordgo.MessageCreate) error {
 		if name == "" {
 			name = member.User.Username
 		}
-		list = append(list, fmt.Sprintf("%s: %dpt", name, r.Point))
+		list = append(list, fmt.Sprintf("%s: %dpt", name, record.Point))
 	}
 
 	_, err = s.ChannelMessageSend(
