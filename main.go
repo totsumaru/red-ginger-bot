@@ -10,6 +10,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
 	"github.com/techstart35/kifuneso-bot/handler"
+	"github.com/techstart35/kifuneso-bot/internal/id"
 )
 
 const (
@@ -51,6 +52,10 @@ func main() {
 		}
 		return
 	}()
+
+	if _, err = session.ChannelMessageSend(id.ChannelID().TEST, "Deployed."); err != nil {
+		panic(err)
+	}
 
 	stopBot := make(chan os.Signal, 1)
 	signal.Notify(stopBot, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
