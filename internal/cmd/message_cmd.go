@@ -9,5 +9,6 @@ const (
 	CMD_Race             = "!rg-race"
 	CMD_DeleteRecordByID = "!rg-delete-record"
 	CMD_RacePointAdd     = "!rg-race-add"
+	CMD_RacePointList    = "!rg-race-list"
 	CMD_DeleteAll        = "!rg-delete-all"
 )
