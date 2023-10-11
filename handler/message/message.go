@@ -60,6 +60,13 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 
+	if strings.Contains(m.Content, cmd.CMD_RacePointAdd) {
+		if err := operate_database.AddPoint(s, m); err != nil {
+			errors.SendErrMsg(s, err, m.Author)
+			return
+		}
+	}
+
 	if err := slot.AddFiveTicketRole(s, m); err != nil {
 		errors.SendErrMsg(s, err, m.Author)
 		return
