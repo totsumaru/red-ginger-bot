@@ -9,7 +9,6 @@ import (
 	"github.com/techstart35/kifuneso-bot/internal/db"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"github.com/techstart35/kifuneso-bot/internal/id"
-	"github.com/techstart35/kifuneso-bot/internal/username"
 )
 
 func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
@@ -97,9 +96,20 @@ func SendRace(s *discordgo.Session, m *discordgo.MessageCreate) error {
 		textLine := make([]string, 0)
 
 		for index, race := range races {
-			userName := username.GetUserNameFromMessageCreate(m)
+			member, err := s.GuildMember(m.GuildID, race.ID)
+			if err != nil {
+				return errors.NewError("ユーザーを取得できません", err)
+			}
 
-			line := fmt.Sprintf("%d. %s: %dpt", index+1, userName, race.Point)
+			name := member.User.Username
+			if member.User.GlobalName != "" {
+				name = member.User.GlobalName
+			}
+			if member.Nick != "" {
+				name = member.Nick
+			}
+
+			line := fmt.Sprintf("%d. %s: %dpt", index+1, name, race.Point)
 			textLine = append(textLine, line)
 		}
 
