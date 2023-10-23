@@ -13,7 +13,7 @@ func (e *EntryUser) AddPoint(point int) {
 	e.Point += point
 }
 
-const EntryImageURL = "https://cdn.discordapp.com/attachments/1070202978323144735/1163354673160396840/RGGandPrix5.png"
+const EntryImageURL = "https://cdn.discordapp.com/attachments/1070202978323144735/1165815665735770202/RGGandPrix_halloween.png?ex=65483972&is=6535c472&hm=7b542792cdb74a7b18611f111aa018f4429fb902609be4a6d7d918cb1a40ca31&"
 
 // 全てのエントリーユーザーです
 //
