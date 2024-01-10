@@ -2,6 +2,8 @@ package slot
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/handler/interaction/utils"
 	"github.com/techstart35/kifuneso-bot/internal/cmd"
@@ -9,7 +11,6 @@ import (
 	"github.com/techstart35/kifuneso-bot/internal/errors"
 	"github.com/techstart35/kifuneso-bot/internal/id"
 	"github.com/techstart35/kifuneso-bot/internal/slot"
-	"strings"
 )
 
 // 3回目の数字を送信します
@@ -35,6 +36,7 @@ func SendThirdNumber(s *discordgo.Session, i *discordgo.InteractionCreate) error
 		Style:    discordgo.PrimaryButton,
 		CustomID: cmd.Interaction_CustomID_Slot_Retry,
 		Label:    "もう一回",
+		Emoji:    discordgo.ComponentEmoji{Name: "▶️"},
 	}
 
 	actions := discordgo.ActionsRow{

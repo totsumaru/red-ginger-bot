@@ -2,6 +2,7 @@ package slot
 
 import (
 	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/handler/interaction/utils"
 	"github.com/techstart35/kifuneso-bot/internal/color"

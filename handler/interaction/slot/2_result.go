@@ -2,10 +2,11 @@ package slot
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/techstart35/kifuneso-bot/internal/color"
 	"github.com/techstart35/kifuneso-bot/internal/errors"
-	"strings"
 )
 
 // 2回目の数字を送信します
